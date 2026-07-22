@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LENA · Marketing Studio</title>
+<style>
+:root{
+  --radius:20px; --radius-sm:13px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+:root, [data-theme="light"]{
+  --bg:#eef7f1; --grad1:#e4f5ea; --grad2:#edf9e0;
+  --surface:#ffffff; --surface-2:#f5fbf7; --surface-3:#eaf5ee;
+  --glass:rgba(255,255,255,.72); --glass-brd:rgba(47,163,107,.16);
+  --text:#0f1a14; --text-soft:#3f5147; --text-mute:#84988b;
+  --border:#e0efe4; --border-strong:#cee6d4;
+  --accent:#2fa36b; --accent-2:#1f8f5a; --accent-soft:#e6f6ec; --accent-ink:#1c6b45;
+  --neon:rgba(47,163,107,.28);
+  --ok:#2fae7d; --warn:#e2953f; --danger:#e0567a;
+  --shadow:0 12px 40px rgba(40,120,80,.12);
+  --black:#0f1a14;
+}
+[data-theme="dark"]{
+  --bg:#080d0a; --grad1:#0e1a12; --grad2:#0b1710;
+  --surface:#111a14; --surface-2:#16221a; --surface-3:#1e2c23;
+  --glass:rgba(22,34,26,.62); --glass-brd:rgba(127,224,173,.22);
+  --text:#eef7f0; --text-soft:#bdd1c4; --text-mute:#7e9587;
+  --border:#233228; --border-strong:#324636;
+  --accent:#54ca92; --accent-2:#2fa36b; --accent-soft:#15281c; --accent-ink:#c9f4d9;
+  --neon:rgba(127,224,173,.45);
+  --ok:#4fd7a0; --warn:#f0a55f; --danger:#ff7d9c;
+  --shadow:0 16px 50px rgba(0,0,0,.55);
+  --black:#eef7f0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;
+  background-image:radial-gradient(1100px 620px at 12% -8%,var(--grad1),transparent 60%),radial-gradient(900px 520px at 100% 0,var(--grad2),transparent 55%);
+  background-attachment:fixed;transition:background .35s,color .3s}
+::selection{background:var(--accent);color:#fff}
+.hide{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* ---------- generic ui ---------- */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}
+.field label{font-size:12.5px;font-weight:600;color:var(--text-soft)}
+.field .hint{font-size:11px;color:var(--text-mute)}
+input[type=text],input[type=password],input[type=tel],input[type=url],select,textarea{
+  width:100%;padding:12px 13px;border-radius:var(--radius-sm);border:1px solid var(--border-strong);
+  background:var(--surface-2);color:var(--text);font-size:14px;transition:.15s;outline:none}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:620px){.two-col,.three-col{grid-template-columns:1fr}}
+.btn{padding:13px 20px;border-radius:var(--radius-sm);font-weight:700;font-size:14px;transition:.18s;display:inline-flex;align-items:center;gap:9px;justify-content:center}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 8px 22px var(--neon)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px var(--neon)}
+.btn-ghost{background:var(--surface-2);border:1px solid var(--border-strong);color:var(--text)}
+.btn-ghost:hover{background:var(--surface-3);border-color:var(--accent)}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
+.btn-row{display:flex;gap:11px;flex-wrap:wrap;margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{padding:9px 14px;border-radius:20px;border:1px solid var(--border-strong);background:var(--surface-2);font-size:13px;font-weight:600;color:var(--text-soft);transition:.16s}
+.chip:hover{border-color:var(--accent);color:var(--text)}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 6px 16px var(--neon)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.card h3{font-size:16px;margin-bottom:3px;letter-spacing:-.3px}
+.card .sub{color:var(--text-mute);font-size:12.5px;margin-bottom:15px}
+.divider{height:1px;background:var(--border);margin:16px 0}
+.err{color:var(--danger);font-size:12.5px;min-height:15px;font-weight:600}
+.badge{font-size:11px;font-weight:700;padding:5px 11px;border-radius:14px;background:var(--accent-soft);color:var(--accent-ink)}
+.section-title{font-size:12.5px;font-weight:700;color:var(--text-soft);margin:6px 0 10px;display:flex;align-items:center;gap:8px}
+.empty{text-align:center;color:var(--text-mute);padding:30px 10px;font-size:14px}
+.spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--black);color:var(--bg);padding:13px 22px;border-radius:14px;font-weight:600;font-size:14px;opacity:0;transition:.3s;z-index:400;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:90%}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- entry screens ---------- */
+.screen{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:22px;overflow:auto;
+  background:radial-gradient(1100px 640px at 18% -6%,var(--grad1),transparent 60%),radial-gradient(900px 520px at 100% 0,var(--grad2),transparent 55%),var(--bg)}
+.logo{border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent-2),#7fe0ad);display:grid;place-items:center;box-shadow:0 8px 20px var(--neon)}
+.logo svg{width:60%;height:60%}
+.auth{width:100%;max-width:410px;background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:34px 30px;box-shadow:var(--shadow);text-align:center}
+.auth .logo{width:56px;height:56px;margin:0 auto 18px}
+.auth h2{font-size:23px;letter-spacing:-.5px;margin-bottom:6px}
+.auth .subt{color:var(--text-mute);font-size:13.5px;margin-bottom:22px}
+.auth .field{text-align:left}.auth .btn{width:100%;margin-top:8px}
+.auth .alt{margin-top:16px;font-size:13px;color:var(--text-mute)}
+.auth .alt a{color:var(--accent);font-weight:700;cursor:pointer}
+.role-pill{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:12px;background:var(--accent-soft);color:var(--accent-ink);margin-bottom:14px}
+.mkt{width:100%;max-width:780px;text-align:center}
+.mkt .logo{width:52px;height:52px;margin:0 auto 14px}
+.mkt h2{font-size:26px;letter-spacing:-.6px;margin-bottom:6px}
+.mkt .subt{color:var(--text-mute);margin-bottom:24px;font-size:14px}
+.mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:13px}
+.mkt-card{background:var(--surface);border:1px solid var(--border-strong);border-radius:20px;padding:24px 14px;transition:.18s;cursor:pointer;position:relative}
+.mkt-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 14px 30px var(--neon)}
+.mkt-card .em{font-size:34px;display:block;margin-bottom:10px}
+.mkt-card .nm{font-weight:700;font-size:14px}
+.mkt-card.soon{opacity:.42;cursor:not-allowed}
+.mkt-card.soon:hover{transform:none;border-color:var(--border-strong);box-shadow:none}
+.soon-tag{position:absolute;top:9px;right:9px;font-size:9px;font-weight:800;background:var(--surface-3);color:var(--text-mute);padding:3px 7px;border-radius:8px;text-transform:uppercase}
+
+/* ---------- market minimal + dropdown ---------- */
+.mkt-min{width:100%;max-width:420px;text-align:center}
+.mkt-min .logo{width:46px;height:46px;margin:0 auto 28px}
+.mkt-min h2{font-size:27px;letter-spacing:-.6px;margin-bottom:22px;font-weight:800}
+.dropdown{position:relative;text-align:left}
+.dd-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px;border-radius:16px;border:1px solid var(--border-strong);background:var(--surface);font-size:15px;font-weight:600;color:var(--text-soft);box-shadow:var(--shadow);transition:.16s}
+.dd-btn:hover{border-color:var(--accent)}
+.dd-btn.open{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.dd-caret{color:var(--text-mute);transition:.2s;font-size:12px}
+.dd-btn.open .dd-caret{transform:rotate(180deg)}
+.dd-menu{position:absolute;top:66px;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:7px;z-index:20;max-height:320px;overflow:auto}
+.dd-item{display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:11px;font-size:14.5px;font-weight:600;cursor:pointer;transition:.14s}
+.dd-item:hover{background:var(--surface-3)}
+.dd-item.soon{opacity:.42;cursor:not-allowed}
+.dd-item .em{font-size:18px}
+.dd-item .st{margin-left:auto;font-size:9px;font-weight:800;text-transform:uppercase;color:var(--text-mute)}
+/* ---------- materiais da marca ---------- */
+.mat{border:1px solid var(--border);border-radius:14px;padding:13px 14px;margin-bottom:11px;background:var(--surface-2)}
+.mat-h{font-weight:700;font-size:13.5px}
+.mat-d{font-size:11.5px;color:var(--text-mute);margin:2px 0 9px}
+.uploader.sm{padding:13px;font-size:13px}
+.logo-prev{width:54px;height:54px;border-radius:12px;object-fit:contain;background:var(--surface);border:1px solid var(--border);padding:5px}
+.swatches{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.sw{width:24px;height:24px;border-radius:7px;border:1px solid var(--border-strong);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+/* ---------- onboarding wizard ---------- */
+.wiz{width:100%;max-width:560px}
+.wiz-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:28px 26px;box-shadow:var(--shadow)}
+.wiz-top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.wiz-top .logo{width:40px;height:40px}
+.wiz-steps{display:flex;gap:6px;margin-bottom:20px}
+.wiz-steps .st{flex:1;height:5px;border-radius:4px;background:var(--surface-3)}
+.wiz-steps .st.on{background:var(--accent)}
+.wiz h2{font-size:20px;letter-spacing:-.4px;margin-bottom:3px}
+.wiz .subt{color:var(--text-mute);font-size:13px;margin-bottom:18px}
+.wiz .field{text-align:left}
+.wiz-nav{display:flex;justify-content:space-between;gap:12px;margin-top:8px}
+.uploader{border:2px dashed var(--border-strong);border-radius:16px;padding:22px;text-align:center;cursor:pointer;transition:.16s;background:var(--surface-2)}
+.uploader:hover{border-color:var(--accent);background:var(--surface-3)}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.thumb{width:62px;height:62px;border-radius:11px;object-fit:cover;border:1px solid var(--border);position:relative}
+.thumb-wrap{position:relative}
+.thumb-x{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--danger);color:#fff;font-size:12px;display:grid;place-items:center;cursor:pointer}
+.dna-box{background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:12px;font-size:13px;line-height:1.55;white-space:pre-wrap;max-height:220px;overflow:auto}
+
+/* ---------- app shell ---------- */
+.appwrap{max-width:780px;margin:0 auto;padding:0 18px 110px;position:relative}
+.topbar{position:sticky;top:0;z-index:80;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0 14px;
+  background:linear-gradient(var(--bg) 70%,transparent)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .logo{width:38px;height:38px}
+.brand h1{font-size:19px;letter-spacing:-.5px}
+.brand small{display:block;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--text-mute);font-weight:700;margin-top:-2px}
+.top-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{width:40px;height:40px;border-radius:12px;background:var(--surface);border:1px solid var(--border);display:grid;place-items:center;font-size:17px;transition:.16s}
+.icon-btn:hover{border-color:var(--accent)}
+.switcher{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:7px 10px 7px 12px;cursor:pointer;font-weight:700;font-size:12.5px;position:relative}
+.switcher:hover{border-color:var(--accent)}.switcher .caret{color:var(--text-mute);font-size:9px}
+.sw-menu{position:absolute;top:46px;right:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:6px;min-width:210px;z-index:90;max-height:320px;overflow:auto}
+.sw-head{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text-mute);padding:8px 10px 5px}
+.sw-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer}
+.sw-item:hover{background:var(--surface-3)}.sw-item.soon{opacity:.5;cursor:not-allowed}
+.sw-item .st{margin-left:auto;font-size:9px;font-weight:800;color:var(--text-mute);text-transform:uppercase}
+
+/* ===== NOVO DASHBOARD (premium) ===== */
+.hero2{position:relative;border-radius:22px;padding:22px 20px;margin-bottom:15px;overflow:hidden;color:#fff;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 16px 44px var(--neon)}
+.hero2::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(560px 200px at 92% -30%,rgba(255,255,255,.38),transparent 60%),radial-gradient(420px 220px at -10% 130%,rgba(255,255,255,.16),transparent 60%)}
+.hero2::after{content:"";position:absolute;top:-60%;left:-40%;width:55%;height:220%;transform:rotate(18deg);pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);animation:sheen 7s ease-in-out infinite}
+@keyframes sheen{0%,100%{left:-45%}55%{left:130%}}
+.hero2-grid{position:absolute;inset:0;opacity:.16;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(circle at 80% 0,#000,transparent 70%);mask-image:radial-gradient(circle at 80% 0,#000,transparent 70%)}
+.hero2 .hi{font-size:23px;font-weight:800;letter-spacing:-.5px;position:relative;z-index:2}
+.hero2 .hs{font-size:13px;opacity:.92;margin-top:4px;position:relative;max-width:74%;z-index:2}
+.clover{position:absolute;top:10px;right:8px;width:112px;height:112px;pointer-events:none;z-index:1;filter:drop-shadow(0 0 8px rgba(255,255,255,.35))}
+.cl-ring{transform-origin:60px 60px;animation:clspin 16s linear infinite}
+.cl-ring2{transform-origin:60px 60px;animation:clspin 11s linear infinite reverse}
+.cl-leaves{transform-origin:60px 60px;animation:clpulse 3.4s ease-in-out infinite}
+.cl-dots{animation:clblink 2.6s ease-in-out infinite}
+@keyframes clspin{to{transform:rotate(360deg)}}
+@keyframes clpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes clblink{0%,100%{opacity:.35}50%{opacity:1}}
+@media(max-width:420px){.clover{width:92px;height:92px;opacity:.85}}
+.hero2-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px;position:relative}
+.hpill{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:6px 12px;font-size:11.5px;font-weight:700;display:flex;align-items:center;gap:7px}
+.live{width:8px;height:8px;border-radius:50%;background:#eafff4;box-shadow:0 0 0 0 rgba(255,255,255,.8);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}70%{box-shadow:0 0 0 7px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:16px}
+.metric{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:13px 14px;position:relative;overflow:hidden;transition:.16s}
+.metric:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 20px var(--neon)}
+.metric::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.mi{width:38px;height:38px;border-radius:11px;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.mk{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-mute);font-weight:700}
+.mv{font-weight:800;font-size:18px;margin-top:2px}
+.plan-cta{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:15px 18px;border-radius:16px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(120deg,var(--accent-2),var(--accent));box-shadow:0 10px 26px var(--neon);transition:.16s}
+.plan-cta:hover{transform:translateY(-2px);box-shadow:0 14px 32px var(--neon)}
+.plan-l{display:flex;align-items:center;gap:13px}
+.plan-ic{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:20px}
+.plan-tx{text-align:left;display:flex;flex-direction:column}
+.plan-tx b{font-size:14.5px}.plan-tx small{font-size:11px;opacity:.88;font-weight:500}
+.plan-ar{font-size:20px;opacity:.9}
+.qa .qi{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:18px;background:var(--accent-soft);color:var(--accent-ink)}
+.qa.main .qi{background:rgba(255,255,255,.18);color:#fff}
+/* Central de Avisos */
+.insights-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.ins-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}
+.ins-head h3{font-size:15px}
+.ins{display:flex;gap:11px;padding:11px 12px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--accent);margin-bottom:9px;align-items:flex-start;animation:fade .3s ease}
+.ins:last-child{margin-bottom:0}
+.ins.warn{border-left-color:var(--warn)}.ins.op{border-left-color:var(--accent)}.ins.tip{border-left-color:#5aa0e6}.ins.trend{border-left-color:#a06ff0}
+.ins-i{font-size:17px;flex-shrink:0;line-height:1.3}
+.ins-t{font-size:12.5px;font-weight:700}
+.ins-x{font-size:11px;color:var(--text-mute);margin-top:2px;line-height:1.45}
+.ins-a{font-size:11px;font-weight:800;color:var(--accent);margin-top:6px;cursor:pointer;display:inline-block}
+/* Gráfico animado */
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px 16px 12px;margin-bottom:16px;box-shadow:var(--shadow)}
+.chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.chart-head h3{font-size:15px}
+.chart-sub{font-size:11px;color:var(--text-mute);font-weight:700}
+.chart{display:flex;align-items:flex-end;gap:9px;height:120px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.bar-track{width:100%;flex:1;display:flex;align-items:flex-end;border-radius:9px;background:var(--surface-2);overflow:hidden}
+.bar-fill{width:100%;border-radius:9px;background:linear-gradient(180deg,var(--accent),var(--accent-2));min-height:5px;height:0;transition:height .9s cubic-bezier(.22,1,.36,1);box-shadow:0 0 14px var(--neon)}
+.bar-v{font-size:12px;font-weight:800}
+.bar-n{font-size:8.5px;color:var(--text-mute);font-weight:700;text-transform:uppercase;letter-spacing:.3px;text-align:center}
+/* Donut moderno */
+.donut-wrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.donut-box{position:relative;width:140px;height:140px;flex-shrink:0}
+.donut-box svg{width:140px;height:140px;transform:rotate(0deg)}
+.dseg{transition:none}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.donut-tot{font-size:27px;font-weight:800;line-height:1}
+.donut-lb{font-size:9px;color:var(--text-mute);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-top:3px}
+.donut-legend{display:flex;flex-direction:column;gap:8px;flex:1;min-width:130px}
+.donut-legend .lg{font-size:12px;font-weight:600;color:var(--text-soft);display:flex;align-items:center;gap:9px}
+.donut-legend i{width:11px;height:11px;border-radius:3px;display:inline-block;flex-shrink:0}
+.donut-legend b{margin-left:auto;color:var(--text)}
+.donut-empty{color:var(--text-mute);font-size:12px;padding:22px;text-align:center}
+
+.hero{position:relative;border-radius:var(--radius);padding:22px;margin-bottom:16px;overflow:hidden;
+  background:var(--glass);border:1px solid var(--glass-brd);backdrop-filter:blur(10px);box-shadow:0 0 30px var(--neon) inset,var(--shadow)}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(400px 200px at 100% 0,var(--neon),transparent 60%);pointer-events:none}
+.hero .hi{font-size:22px;font-weight:800;letter-spacing:-.5px;position:relative}
+.hero .hs{color:var(--text-soft);font-size:13px;margin-top:4px;position:relative;max-width:80%}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:18px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:13px}
+.stat .k{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-mute);font-weight:700}
+.stat .v{font-weight:800;font-size:17px;margin-top:3px}
+.stat .v small{font-size:10px;color:var(--accent);font-weight:700}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:6px}
+.qa{padding:16px 14px;border-radius:16px;font-weight:700;font-size:13.5px;display:flex;flex-direction:column;gap:8px;text-align:left;transition:.16s;border:1px solid transparent}
+.qa .qi{font-size:21px}
+.qa.main{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 8px 24px var(--neon)}
+.qa.alt{background:var(--surface);border-color:var(--border);color:var(--text)}
+.qa:hover{transform:translateY(-3px)}
+.rowcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:9px;display:flex;align-items:center;gap:12px;transition:.16s;text-align:left;width:100%}
+.rowcard:hover{border-color:var(--accent);transform:translateX(3px)}
+.rowcard .rb{min-width:44px;text-align:center;background:var(--accent-soft);border-radius:10px;padding:6px 3px}
+.rowcard .rb .rd{font-weight:800;font-size:15px;line-height:1;color:var(--accent-ink)}
+.rowcard .rb .rm{font-size:8px;text-transform:uppercase;font-weight:700;color:var(--accent-ink)}
+.rowcard .rn{font-size:13px;font-weight:700}
+.rowcard .rt{font-size:11px;color:var(--text-mute)}
+.blockhead{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px}
+.blockhead h3{font-size:15px}.blockhead a{font-size:12px;color:var(--accent);font-weight:700;cursor:pointer}
+
+/* tabs */
+.tabs{display:flex;gap:6px;background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:5px;margin-bottom:16px}
+.tabs button{flex:1;padding:9px;border-radius:10px;font-size:13px;font-weight:700;color:var(--text-mute);transition:.15s}
+.tabs button.on{background:var(--surface);color:var(--accent);box-shadow:0 2px 8px var(--neon)}
+
+.bstep{margin:16px 0 8px;font-size:13px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:9px}
+.bstep .n{width:21px;height:21px;border-radius:7px;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-size:11px;font-weight:800}
+.bgrp{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-mute);margin:11px 0 6px}
+.bsum{margin-top:15px;font-size:12px;color:var(--text-mute);background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:11px 13px;line-height:1.7}
+.bsum b{color:var(--text-soft)}
+.bfield{margin-bottom:12px}
+.bfield>label{font-size:12px;font-weight:700;color:var(--text-soft);display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bfield>label .n{width:20px;height:20px;border-radius:6px;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-size:10.5px;font-weight:800}
+.bdd{position:relative}
+.bdd-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;border-radius:13px;border:1px solid var(--border-strong);background:var(--surface-2);font-size:14px;font-weight:600;color:var(--text);transition:.15s;text-align:left}
+.bdd-btn:hover{border-color:var(--accent)}
+.bdd-btn.open{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.bdd-btn .cr{color:var(--text-mute);font-size:11px;transition:.2s;flex-shrink:0}
+.bdd-btn.open .cr{transform:rotate(180deg)}
+.bmenu{position:absolute;top:56px;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:13px;box-shadow:var(--shadow);padding:6px;z-index:40;max-height:280px;overflow:auto}
+.bmenu.hide{display:none}
+.bopt{padding:11px 13px;border-radius:10px;font-size:13.5px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px}
+.bopt:hover{background:var(--surface-3)}
+.bopt.sel{background:var(--accent-soft);color:var(--accent-ink)}
+.bopt.soon{opacity:.45;cursor:not-allowed}
+.bmenu .grp{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text-mute);padding:9px 10px 4px}
+.bnote{font-size:11.5px;color:var(--text-mute);background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:11px 13px;line-height:1.5}
+.kit-row{display:grid;grid-template-columns:56px 1fr 1fr;gap:8px;align-items:center;margin-bottom:8px}
+.kit-row .kn{font-size:12px;font-weight:700;color:var(--text-soft)}
+.kit-row input{padding:10px 11px;font-size:13px}
+.kit-art{border:1px solid var(--border);border-radius:14px;padding:12px;margin-top:12px;background:var(--surface)}
+.kit-art-h{font-weight:700;font-size:13px;margin-bottom:9px;color:var(--text)}
+.kit-art-body{min-height:40px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.kit-img{width:100%;border-radius:10px;display:block}
+#resultImage img,.kit-img{box-shadow:0 6px 18px rgba(0,0,0,.12)}
+.result{white-space:pre-wrap;line-height:1.62;font-size:14.5px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:17px}
+.result-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+.idea{border:1px solid var(--border-strong);background:var(--surface-2);border-radius:13px;padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:.15s;text-align:left;width:100%}
+.idea:hover{border-color:var(--accent);transform:translateX(3px)}
+.idea.active{border-color:var(--accent);background:var(--accent-soft)}
+.idea .it{font-weight:700;font-size:13.5px}
+.idea .ia{font-size:12px;color:var(--text-mute);margin-top:2px}
+
+/* date tags */
+.date-item{display:flex;align-items:center;gap:13px;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:var(--surface);margin-bottom:9px;transition:.16s}
+.date-item:hover{border-color:var(--accent)}
+.date-badge{min-width:48px;text-align:center;background:var(--surface-3);border-radius:10px;padding:6px 3px}
+.date-badge .d{font-size:17px;font-weight:800;line-height:1}
+.date-badge .m{font-size:9px;color:var(--text-mute);text-transform:uppercase;font-weight:700}
+.date-info{flex:1}.date-info .dn{font-weight:700;font-size:13.5px}.date-info .dt{font-size:11px;color:var(--text-mute);margin-top:2px}
+.tag{font-size:9px;font-weight:800;padding:3px 7px;border-radius:9px;text-transform:uppercase;letter-spacing:.3px}
+.tag.nac{background:#e7f0ff;color:#2c62c9}.tag.go{background:#e6f9ee;color:#1f9d63}.tag.min{background:#fff0e6;color:#c96a1f}.tag.esp{background:#fdeaf4;color:#c93e86}.tag.sol{background:#fff8db;color:#b78a00}
+[data-theme=dark] .tag.nac{background:#1a2540;color:#8fb4ff}[data-theme=dark] .tag.go{background:#14301f;color:#63e0a0}[data-theme=dark] .tag.min{background:#331f10;color:#f0a55f}[data-theme=dark] .tag.esp{background:#2e1424;color:#ff9ccb}[data-theme=dark] .tag.sol{background:#2b2405;color:#e6c94a}
+
+/* saved */
+.saved-item{border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:11px;background:var(--surface)}
+.saved-item .meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.saved-item .txt{white-space:pre-wrap;font-size:13.5px;line-height:1.55;color:var(--text-soft);max-height:110px;overflow:hidden}
+.saved-item.open .txt{max-height:none}
+
+/* admin */
+.user-box{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);margin-bottom:10px}
+.avatar{width:34px;height:34px;border-radius:10px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800}
+.user-box .un{font-weight:700;font-size:13px}.user-box .ur{font-size:10px;color:var(--text-mute);text-transform:uppercase;font-weight:700}
+table.utable{width:100%;border-collapse:collapse;font-size:13px}
+table.utable th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-mute);padding:8px;border-bottom:1px solid var(--border)}
+table.utable td{padding:9px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.mini-btn{padding:6px 10px;border-radius:9px;border:1px solid var(--border-strong);background:var(--surface-2);font-size:11.5px;font-weight:600;cursor:pointer}
+.mini-btn:hover{border-color:var(--accent)}.mini-btn.danger{color:var(--danger)}
+.rbadge{font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:9px;text-transform:uppercase}
+.rbadge.admin{background:var(--accent-soft);color:var(--accent-ink)}.rbadge.user{background:var(--surface-3);color:var(--text-mute)}
+
+/* bottom nav */
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;justify-content:space-around;padding:9px 8px 12px;
+  background:var(--glass);backdrop-filter:blur(14px);border-top:1px solid var(--glass-brd);box-shadow:0 -6px 26px rgba(0,0,0,.08)}
+.nav-ic{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--text-mute);font-size:9.5px;font-weight:700;padding:5px 12px;border-radius:12px;transition:.15s;min-width:58px}
+.nav-ic .ni{font-size:19px;transition:.15s}
+.nav-ic.act{color:var(--accent)}
+.nav-ic.act .ni{filter:drop-shadow(0 0 7px var(--neon))}
+.view{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- ============ ACESSO ============ -->
+<div class="screen" id="authScreen">
+  <div class="auth">
+    <div class="logo" id="authLogo"></div>
+    <div class="role-pill hide" id="authRole">Administrador</div>
+    <h2 id="authTitle">Bem-vindo à LENA</h2>
+    <div class="subt" id="authSub">Seu estúdio de marketing com IA.</div>
+    <div class="field hide" id="fName"><label>Nome</label><input type="text" id="au_name" placeholder="Seu nome" autocomplete="off"></div>
+    <div class="field"><label>E-mail</label><input type="email" id="au_email" placeholder="voce@email.com" autocomplete="off"></div>
+    <div class="field"><label>Senha</label><input type="password" id="au_pass" placeholder="••••••" autocomplete="off"></div>
+    <div class="err" id="au_err"></div>
+    <button class="btn btn-primary" id="au_btn">Entrar</button>
+    <div class="alt" id="au_alt"></div>
+  </div>
+</div>
+
+<!-- ============ MERCADO ============ -->
+<div class="screen hide" id="mktScreen">
+  <div class="mkt-min">
+    <div class="logo" id="mktLogo"></div>
+    <h2>Escolha o seu mercado</h2>
+    <div class="dropdown" id="mktDrop">
+      <button class="dd-btn" id="ddBtn"><span id="ddLabel">Selecione um mercado</span><span class="dd-caret">▾</span></button>
+      <div class="dd-menu hide" id="ddMenu"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PARA QUEM ============ -->
+<div class="screen hide" id="usageScreen">
+  <div class="mkt-min">
+    <div class="logo" id="usageLogo"></div>
+    <h2>Para quem você está utilizando?</h2>
+    <div class="dropdown" id="usageDrop">
+      <button class="dd-btn" id="uddBtn"><span id="uddLabel">Selecione uma opção</span><span class="dd-caret">▾</span></button>
+      <div class="dd-menu hide" id="uddMenu"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ONBOARDING ============ -->
+<div class="screen hide" id="wizScreen">
+  <div class="wiz">
+    <div class="wiz-card">
+      <div class="wiz-top"><div class="logo" id="wizLogo"></div><div><h2 style="font-size:16px;margin:0">Configuração inteligente</h2><div style="font-size:12px;color:var(--text-mute)">Vamos conhecer sua empresa de energia solar</div></div></div>
+      <div class="wiz-steps" id="wizSteps"></div>
+      <div id="wizBody"></div>
+      <div class="err" id="wizErr"></div>
+      <div class="wiz-nav">
+        <button class="btn btn-ghost" id="wizBack">← Voltar</button>
+        <button class="btn btn-primary" id="wizNext">Continuar →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="appwrap" id="appRoot" style="display:none">
+  <div class="topbar">
+    <div class="brand"><div class="logo" id="brandLogo"></div><div><h1>LENA</h1><small>Solar Studio</small></div></div>
+    <div class="top-actions">
+      <div class="switcher" id="mktSwitcher" title="Trocar de mercado">
+        <span id="mktSwEm">☀️</span><span id="mktSwName">Solar</span><span class="caret">▼</span>
+        <div class="sw-menu hide" id="swMenu"></div>
+      </div>
+      <button class="icon-btn" id="themeToggle" title="Tema">🌙</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <section id="view-home" class="view">
+    <div class="hero2">
+      <div class="hero2-grid"></div>
+      <svg class="clover" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <circle class="cl-ring" cx="60" cy="60" r="51" stroke="#fff" stroke-width="1.3" stroke-dasharray="3 8" opacity=".55"/>
+        <circle class="cl-ring2" cx="60" cy="60" r="44" stroke="#fff" stroke-width="1" stroke-dasharray="1 6" opacity=".4"/>
+        <g class="cl-leaves" stroke="#fff" stroke-width="1.4">
+          <path d="M60 60 C 43 41, 45 21, 60 17 C 75 21, 77 41, 60 60 Z" fill="rgba(255,255,255,.9)" transform="rotate(0 60 60)"/>
+          <path d="M60 60 C 43 41, 45 21, 60 17 C 75 21, 77 41, 60 60 Z" fill="rgba(255,255,255,.72)" transform="rotate(120 60 60)"/>
+          <path d="M60 60 C 43 41, 45 21, 60 17 C 75 21, 77 41, 60 60 Z" fill="rgba(255,255,255,.82)" transform="rotate(240 60 60)"/>
+        </g>
+        <path d="M60 63 L60 95" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".85"/>
+        <circle cx="60" cy="96" r="2.4" fill="#fff"/>
+        <g fill="#fff" class="cl-dots">
+          <circle cx="60" cy="20" r="2.6"/><circle cx="60" cy="20" r="2.6" transform="rotate(120 60 60)"/><circle cx="60" cy="20" r="2.6" transform="rotate(240 60 60)"/>
+        </g>
+        <circle cx="60" cy="60" r="5" fill="#fff"/>
+      </svg>
+      <div class="hi" id="heroHi">Olá 👋</div>
+      <div class="hs" id="heroSub">Pronto pra criar conteúdo de energia solar.</div>
+      <div class="hero2-pills">
+        <span class="hpill"><span class="live"></span> Plataforma ativa</span>
+        <span class="hpill">☀️ Energia Solar</span>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="mi">🏢</div><div><div class="mk">Empresa</div><div class="mv" id="stEmpresa" style="font-size:15px">—</div></div></div>
+      <div class="metric"><div class="mi">📝</div><div><div class="mk">Posts salvos</div><div class="mv" id="stPosts">0</div></div></div>
+      <div class="metric"><div class="mi">🤖</div><div><div class="mk">IA ativa</div><div class="mv" id="stAI">—</div></div></div>
+      <div class="metric"><div class="mi">🎨</div><div><div class="mk">DNA da marca</div><div class="mv" id="stDNA">—</div></div></div>
+    </div>
+
+    <div class="insights-card">
+      <div class="ins-head"><h3>🔔 Central de Avisos & Sugestões</h3><button class="mini-btn" id="btnInsights">✨ Sugestões da IA</button></div>
+      <div id="insightsList"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-head"><h3>📊 Sua atividade</h3><span class="chart-sub" id="chartTotal">0 conteúdos</span></div>
+      <div class="chart" id="chartBox"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-head"><h3>🍩 Mix de conteúdo</h3><span class="chart-sub">distribuição</span></div>
+      <div id="donutBox"></div>
+    </div>
+
+    <div id="ctxBtnWrap" class="hide" style="margin-bottom:16px"><button class="btn btn-primary" id="btnCtx" style="width:100%">📎 Anexar Informações</button></div>
+
+    <button class="plan-cta" id="btnPlanOpen">
+      <span class="plan-l"><span class="plan-ic">🗓️</span><span class="plan-tx"><b>Programação de Conteúdo</b><small>Calendário editorial automático por IA</small></span></span>
+      <span class="plan-ar">→</span>
+    </button>
+
+    <div class="section-title">⚡ Ações rápidas</div>
+    <div class="qgrid">
+      <button class="qa main" data-act="post"><span class="qi">✨</span>Criar post</button>
+      <button class="qa alt" data-act="ideas"><span class="qi">💡</span>Gerar ideias</button>
+      <button class="qa alt" data-act="campaign"><span class="qi">🎯</span>Nova campanha</button>
+      <button class="qa alt" data-act="dates"><span class="qi">📅</span>Post de data</button>
+    </div>
+
+    <div class="blockhead"><h3>📅 Próximas datas</h3><a data-goto="dates">ver todas</a></div>
+    <div id="homeDates"></div>
+    <div class="blockhead"><h3>📌 Últimos posts</h3><a data-goto="saved">ver todos</a></div>
+    <div id="homeSaved"></div>
+  </section>
+
+  <!-- CRIAR -->
+  <section id="view-create" class="view hide">
+    <div class="tabs" id="createTabs">
+      <button data-tab="post" class="on">✨ Post</button>
+      <button data-tab="ideas">💡 Ideias</button>
+      <button data-tab="campaign">🎯 Campanha</button>
+      <button data-tab="kits">🎁 Kits</button>
+      <button data-tab="maint">🧽 Limpeza</button>
+    </div>
+
+    <!-- POST -->
+    <div id="tab-post">
+      <div class="card">
+        <h3>Criar post</h3>
+        <div class="sub">Combine as etapas abaixo. Cada uma é independente e tudo respeita o DNA e as cores da sua marca.</div>
+        <div class="field"><label>Tema / assunto (opcional)</label><textarea id="briefing" placeholder="Ex: Kit solar 6 placas com 20% off. Deixe em branco para a LENA escolher um tema relevante."></textarea></div>
+        <div id="builderBox"></div>
+        <div id="builderSummary" class="bsum"></div>
+        <div class="btn-row" style="margin-top:14px"><button class="btn btn-primary" id="btnPost">✨ Gerar conteúdo</button></div>
+      </div>
+    </div>
+
+    <!-- IDEAS -->
+    <div id="tab-ideas" class="hide">
+      <div class="card">
+        <h3>Gerar ideias de conteúdo</h3>
+        <div class="sub">A LENA sugere temas relevantes para energia solar. Escolha um e crie o post.</div>
+        <div class="two-col">
+          <div class="field"><label>Canal</label><select id="channelI"></select></div>
+          <div class="field"><label>Foco (opcional)</label><input type="text" id="ideaFocus" placeholder="Ex: geração distribuída, rural, comércio..."></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" id="btnIdeas">💡 Sugerir ideias</button></div>
+        <div id="ideaList" style="margin-top:14px"></div>
+        <div class="btn-row hide" id="ideaCreateRow"><button class="btn btn-primary" id="btnCreateFromIdea">✨ Criar post da ideia escolhida</button></div>
+      </div>
+    </div>
+
+    <!-- CAMPAIGN -->
+    <div id="tab-campaign" class="hide">
+      <div class="card">
+        <h3>Nova campanha (tráfego pago)</h3>
+        <div class="sub">Responda o briefing. A LENA age como especialista em tráfego para energia solar.</div>
+        <div class="two-col">
+          <div class="field"><label>Cidades para anunciar</label><input type="text" id="cpCities" placeholder="Ex: Mineiros, Jataí, Rio Verde"></div>
+          <div class="field"><label>Estado</label><input type="text" id="cpState" placeholder="Ex: GO"></div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Verba</label><input type="text" id="cpBudget" placeholder="Ex: R$ 50/dia ou R$ 1.500/mês"></div>
+          <div class="field"><label>Objetivo</label><select id="cpGoal">
+            <option>Leads (formulário)</option><option>Mensagens no WhatsApp</option><option>Mensagens (Direct/Messenger)</option><option>Tráfego</option><option>Conversões</option><option>Reconhecimento de marca</option></select></div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Oferta / promoção</label><input type="text" id="cpOffer" placeholder="Ex: 20% off + brinde na instalação"></div>
+          <div class="field"><label>Restrição geográfica</label><input type="text" id="cpGeo" placeholder="Ex: raio de 40km, só zona urbana"></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" id="btnCampaign">🎯 Gerar estratégia + anúncios</button></div>
+      </div>
+    </div>
+
+    <!-- MANUTENÇÃO E LIMPEZA -->
+    <div id="tab-maint" class="hide">
+      <div class="card">
+        <h3>Manutenção e Limpeza</h3>
+        <div class="sub">Posts específicos sobre limpeza e manutenção de placas solares. Sem datas comemorativas — só Instagram e Meta Ads.</div>
+        <div class="two-col">
+          <div class="field"><label>Plataforma</label><select id="mPlatform"><option value="ig_feed">Instagram Feed</option><option value="ig_story">Instagram Story</option><option value="meta_ads">Meta Ads</option></select></div>
+          <div class="field"><label>Objetivo</label><select id="mGoal"><option>Agendar manutenção/limpeza</option><option>Educar o cliente</option><option>Gerar leads</option><option>Autoridade no assunto</option><option>Direcionar para WhatsApp</option></select></div>
+        </div>
+        <div class="field"><label>Foco do post</label><select id="mTopic"></select></div>
+        <div class="field"><label>Tema livre (opcional)</label><textarea id="mTopicFree" placeholder="Ex: promoção de limpeza no mês da seca, checklist de manutenção, alerta de queda de geração..."></textarea></div>
+        <div class="btn-row"><button class="btn btn-primary" id="btnMaint">🧽 Gerar conteúdo</button></div>
+      </div>
+    </div>
+
+    <!-- KITS PROMOCIONAIS -->
+    <div id="tab-kits" class="hide">
+      <div class="card">
+        <h3>Kits Promocionais</h3>
+        <div class="sub">Preencha o básico e a LENA cria uma arte para cada kit, padronizada com a identidade da sua marca.</div>
+        <div class="two-col">
+          <div class="field"><label>Plataforma</label><select id="kPlatform"><option value="ig_feed">Instagram Feed</option><option value="ig_story">Instagram Story</option></select></div>
+          <div class="field"><label>Mês da promoção</label><select id="kMonth"></select></div>
+        </div>
+        <div class="bnote" id="kCampaignName"></div>
+      </div>
+
+      <div class="card">
+        <h3>Materiais de referência <span style="font-weight:600;color:var(--text-mute);font-size:12px">(opcional, recomendado)</span></h3>
+        <div class="sub">Anexe posts antigos de kits, artes de campanhas, layouts ou modelos da empresa. A LENA aprende o estilo (layout, tipografia, cores, hierarquia, ofertas, posição do logo) e usa como DNA visual dos kits.</div>
+        <div class="uploader sm" id="kUploader">📎 Anexar materiais de referência<input type="file" id="kFiles" accept="image/*" multiple class="hide"></div>
+        <div class="thumbs" id="kThumbs"></div>
+        <div class="btn-row"><button class="btn btn-ghost" id="kAnalyze">🧠 Aprender estilo dos kits</button></div>
+        <div class="field" style="margin-top:10px"><label>DNA visual dos kits (editável)</label><textarea id="kDna" style="min-height:80px" placeholder="Aparece após aprender o estilo. Você pode ajustar."></textarea></div>
+      </div>
+
+      <div class="card">
+        <h3>Forma de geração</h3>
+        <div class="sub">Escolha como a LENA deve criar as artes.</div>
+        <div class="chips" id="kModeChips"></div>
+      </div>
+
+      <div class="card">
+        <h3>Informações dos Kits</h3>
+        <div class="sub">Cadastre de 1 a 10 kits. Preencha só os que quiser — os vazios são ignorados. Cada kit vira uma arte.</div>
+        <div id="kitsList"></div>
+      </div>
+
+      <div class="btn-row"><button class="btn btn-primary" id="btnKits">🎁 Gerar artes dos kits</button></div>
+      <div id="kitsResult"></div>
+    </div>
+
+    <div class="card hide" id="resultCard">
+      <div class="result-head">
+        <span class="badge" id="resultBadge">Resultado</span>
+        <div style="display:flex;gap:8px">
+          <button class="mini-btn" id="btnCopy">📋 Copiar</button>
+          <button class="mini-btn" id="btnImage">🎨 Gerar imagem</button>
+          <button class="mini-btn" id="btnSave">📌 Salvar</button>
+          <button class="mini-btn" id="btnRegen">🔄 Refazer</button>
+        </div>
+      </div>
+      <div class="result" id="resultBox"></div>
+    </div>
+  </section>
+
+  <!-- DATAS -->
+  <section id="view-dates" class="view hide">
+    <div class="card">
+      <h3>Calendário de marketing</h3>
+      <div class="sub">Datas nacionais, de Goiás, Mineiros e especiais. Cada post é adaptado ao seu DNA solar.</div>
+      <div class="chips" id="dateFilters"></div>
+    </div>
+    <div class="card"><div id="datesList"></div></div>
+  </section>
+
+  <!-- POSTS -->
+  <section id="view-saved" class="view hide">
+    <div class="card">
+      <h3>Meus posts</h3>
+      <div class="sub">Tudo que você gerou e salvou. Clique para expandir.</div>
+      <div id="savedList"></div>
+    </div>
+  </section>
+
+  <!-- AJUSTES -->
+  <section id="view-settings" class="view hide">
+    <div class="tabs" id="setTabs">
+      <button data-stab="empresa" class="on" id="tabEmpresa">🏢 Empresa</button>
+      <button data-stab="ai">🤖 IA</button>
+      <button data-stab="admin" id="setAdminTab">🛡️ Admin</button>
+    </div>
+
+    <div id="stab-empresa">
+      <div class="card" id="profileCard">
+        <h3>Perfil da empresa</h3>
+        <div class="sub">Base de tudo. Preencha bem — padroniza todas as peças.</div>
+        <div class="two-col">
+          <div class="field"><label>Nome da empresa</label><input type="text" id="p_name" placeholder="Goiás Energy"></div>
+          <div class="field"><label>Site</label><input type="text" id="p_site" placeholder="www..."></div>
+        </div>
+        <div class="three-col">
+          <div class="field"><label>Cidade</label><input type="text" id="p_city" placeholder="Mineiros"></div>
+          <div class="field"><label>Estado</label><input type="text" id="p_state" placeholder="GO"></div>
+          <div class="field"><label>Região de atuação</label><input type="text" id="p_region" placeholder="Sudoeste goiano"></div>
+        </div>
+        <div class="field"><label>Endereço</label><input type="text" id="p_address" placeholder="Rua, nº, bairro"></div>
+        <div class="two-col">
+          <div class="field"><label>Telefone</label><input type="tel" id="p_phone" placeholder="(64) ..."></div>
+          <div class="field"><label>WhatsApp</label><input type="tel" id="p_whatsapp" placeholder="(64) 9...."></div>
+        </div>
+        <div class="field"><label>Redes sociais</label><input type="text" id="p_social" placeholder="@instagram, /facebook, tiktok..."></div>
+        <div class="field"><label>Público-alvo</label><input type="text" id="p_audience" placeholder="Famílias, comércios e produtores rurais"></div>
+        <div class="field"><label>Diferenciais</label><textarea id="p_diff" placeholder="Financiamento próprio, equipe técnica, manutenção..."></textarea></div>
+        <div class="field"><label>Principais produtos e serviços</label><textarea id="p_products" placeholder="Kits residenciais, comerciais e rurais; instalação; manutenção e limpeza de placas..."></textarea></div>
+        <div class="two-col">
+          <div class="field"><label>Tom de comunicação</label><input type="text" id="p_tone" placeholder="Confiável, próximo, sustentável"></div>
+          <div class="field"><label>Objetivos de marketing</label><input type="text" id="p_goals" placeholder="Gerar leads no WhatsApp, autoridade local"></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" id="btnSaveProfile">💾 Salvar perfil</button></div>
+      </div>
+
+      <div class="card" id="materialsCard">
+        <h3 id="matCardTitle">Materiais da marca</h3>
+        <div class="sub" id="matCardSub">Opcionais, mas quanto mais a LENA conhece sua identidade, mais fiéis e profissionais ficam os conteúdos. Sem eles, usamos boas práticas do mercado.</div>
+        <div class="mat"><div class="mat-h">📘 Manual da Marca (Brand Book)</div><div class="mat-d">Paleta, tipografia, tom e diretrizes.</div>
+          <div class="uploader sm" id="sUpBook">📎 Anexar (imagens/prints)<input type="file" id="sfBook" accept="image/*" multiple class="hide"></div><div class="thumbs" id="sthBook"></div></div>
+        <div class="mat"><div class="mat-h">🎯 Logotipo</div><div class="mat-d">Referência para artes, campanhas e materiais.</div>
+          <div class="uploader sm" id="sUpLogo">📎 Anexar logo<input type="file" id="sfLogo" accept="image/*" class="hide"></div><div class="thumbs" id="sthLogo"></div></div>
+        <div class="mat"><div class="mat-h">🖼️ Posts antigos</div><div class="mat-d">Aprende design, cores, layout, títulos e tom.</div>
+          <div class="uploader sm" id="sUpPosts">📎 Anexar posts<input type="file" id="sfPosts" accept="image/*" multiple class="hide"></div><div class="thumbs" id="sthPosts"></div></div>
+        <div class="mat"><div class="mat-h">🎨 Cores oficiais</div><div class="mat-d">HEX (ex: #0F4C81), RGB ou CMYK. Extraídas automaticamente do Brand Book/logo quando possível; senão, informe aqui.</div>
+          <input type="text" id="p_colors" placeholder="#0F4C81, #F5A623, rgb(15,76,129)"><div class="swatches" id="p_swatches"></div></div>
+        <div class="btn-row"><button class="btn btn-primary" id="btnAnalyze">🧠 Analisar materiais com IA</button></div>
+        <div class="divider"></div>
+        <div class="field"><label>Resumo do DNA / estilo (editável)</label><textarea id="p_dna" style="min-height:130px" placeholder="Após analisar, o resumo do seu estilo aparece aqui. Você pode ajustar."></textarea></div>
+        <div class="field"><label id="notesLabel">Informações adicionais (briefings, links, observações)</label><textarea id="p_notes" placeholder="Ex: links de referência, briefing do que quer criar, público, observações..."></textarea></div>
+        <div class="btn-row"><button class="btn btn-ghost" id="btnSaveDNA">💾 Salvar materiais</button></div>
+      </div>
+    </div>
+
+    <div id="stab-ai" class="hide">
+      <div class="card">
+        <h3>Motor de IA</h3>
+        <div class="sub">Escolha a IA e cole sua chave. Fica só neste navegador.</div>
+        <div class="field"><label>IA ativa</label><div class="chips" id="providerChips"></div></div>
+        <div class="divider"></div>
+        <div class="section-title">🟣 Claude (Anthropic)</div>
+        <div class="two-col"><div class="field"><label>API Key</label><input type="password" id="k_anthropic" placeholder="sk-ant-..."></div><div class="field"><label>Modelo</label><input type="text" id="m_anthropic" placeholder="claude-sonnet-4-5"></div></div>
+        <div class="section-title">🟢 ChatGPT (OpenAI)</div>
+        <div class="two-col"><div class="field"><label>API Key</label><input type="password" id="k_openai" placeholder="sk-..."></div><div class="field"><label>Modelo</label><input type="text" id="m_openai" placeholder="gpt-4o"></div></div>
+        <div class="section-title">🔵 Gemini (Google)</div>
+        <div class="two-col"><div class="field"><label>API Key</label><input type="password" id="k_gemini" placeholder="AIza..."></div><div class="field"><label>Modelo</label><input type="text" id="m_gemini" placeholder="gemini-2.0-flash"></div></div>
+        <div class="divider"></div>
+        <div class="section-title">🎨 Geração de imagem</div>
+        <div class="two-col">
+          <div class="field"><label>Modelo de imagem</label><select id="imgModel"><option value="dall-e-3">DALL·E 3</option><option value="gpt-image-1">GPT Image 1 (melhor com texto)</option></select></div>
+          <div class="field"><label>Logo nas artes</label><select id="imgLogoPos"><option value="auto">Automático (topo)</option><option value="tl">Superior esquerdo</option><option value="tr">Superior direito</option><option value="br">Inferior direito</option><option value="none">Não aplicar</option></select></div>
+        </div>
+        <div class="field hint">As imagens usam a chave da <b>OpenAI (ChatGPT)</b> acima. O logo (cadastrado em Materiais) é aplicado automaticamente na arte, com proporção, respiro e contraste.</div>
+        <div class="btn-row"><button class="btn btn-primary" id="btnSaveAI">💾 Salvar chaves</button><button class="btn btn-ghost" id="btnTestAI">🔌 Testar</button></div>
+      </div>
+    </div>
+
+    <div id="stab-admin" class="hide">
+      <div class="card">
+        <div class="user-box"><div class="avatar" id="userAvatar">L</div><div><div class="un" id="userName">Usuário</div><div class="ur" id="userRole">usuário</div></div></div>
+        <h3 style="font-size:14px">Minha senha</h3>
+        <div class="two-col"><div class="field"><label>Nova senha</label><input type="password" id="adm_newpass"></div><div class="field"><label>Confirmar</label><input type="password" id="adm_newpass2"></div></div>
+        <div class="btn-row"><button class="btn btn-primary" id="btnChangeMyPass">💾 Atualizar minha senha</button><button class="btn btn-ghost" id="btnLogout">↩︎ Sair</button></div>
+      </div>
+      <div class="card" id="adminOnly">
+        <h3>Usuários</h3>
+        <div class="sub">Novos usuários se cadastram sozinhos na tela de acesso. Aqui você vê todos, muda o perfil (admin/usuário) e consulta os dados de cada um.</div>
+        <div style="overflow:auto"><table class="utable" id="usersTable"></table></div>
+        <div id="userDetail"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMAÇÃO DE CONTEÚDO -->
+  <section id="view-plan" class="view hide">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h3>🗓️ Programação de Conteúdo</h3><button class="mini-btn" id="planBack">← Voltar</button></div>
+      <div class="sub">A LENA monta um calendário editorial estratégico — equilibrando conteúdos educativos, comerciais, de autoridade, engajamento, leads e vendas, sem repetir, e aproveitando as datas comemorativas do período.</div>
+      <div class="two-col">
+        <div class="field"><label>Período</label><select id="planPeriod"><option>Semanal</option><option>Mensal</option><option>Personalizado</option></select></div>
+        <div class="field" id="planDaysWrap" style="display:none"><label>Quantos dias</label><input type="text" id="planDays" placeholder="Ex: 15"></div>
+      </div>
+      <div class="field"><label>Foco extra (opcional)</label><input type="text" id="planFoco" placeholder="Ex: reforçar geração de leads no WhatsApp"></div>
+      <div class="btn-row"><button class="btn btn-primary" id="btnPlan">🗓️ Gerar programação</button></div>
+    </div>
+    <div id="planResult"></div>
+  </section>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottomnav" id="bottomnav">
+    <button class="nav-ic act" data-view="home"><span class="ni">🏠</span>Início</button>
+    <button class="nav-ic" data-view="create"><span class="ni">✦</span>Criar</button>
+    <button class="nav-ic" data-view="dates"><span class="ni">📅</span>Datas</button>
+    <button class="nav-ic" data-view="saved"><span class="ni">📌</span>Posts</button>
+    <button class="nav-ic" data-view="settings"><span class="ni">⚙️</span>Ajustes</button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ==================== SUPABASE ==================== */
+const SB_URL='https://nvirlcpxcdrapepaftpc.supabase.co';
+const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52aXJsY3B4Y2RyYXBlcGFmdHBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3Mzk0MzEsImV4cCI6MjEwMDMxNTQzMX0.Xu3Qfzp-kw_1XiZZnOWRsFi2-DgL1nHlXAUFreq3uhs';
+const sb=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SB_URL,SB_ANON):null;
+
+/* ==================== DADOS ==================== */
+const MARKETS=[
+  {id:'solar',emoji:'☀️',name:'Energia Solar'},
+  {id:'varejo',emoji:'🛍️',name:'Varejo'},{id:'alim',emoji:'🍔',name:'Alimentação'},
+  {id:'saude',emoji:'🩺',name:'Saúde'},{id:'imob',emoji:'🏠',name:'Imobiliário'},
+  {id:'serv',emoji:'🔧',name:'Serviços'},{id:'auto',emoji:'🚗',name:'Automotivo'},
+  {id:'moda',emoji:'👗',name:'Moda'},{id:'edu',emoji:'🎓',name:'Educação'}
+];
+const CHANNELS=[
+  {id:'ig_feed',label:'📸 Instagram Feed',fmt:'legenda de feed com quebras de linha e emojis moderados'},
+  {id:'ig_story',label:'📲 Instagram Story',fmt:'texto curtíssimo de story, frases de impacto, sugestão de enquete e CTA'},
+  {id:'wpp',label:'💬 WhatsApp / Status',fmt:'mensagem curta e direta para status/transmissão, com CTA imediato'},
+  {id:'tiktok',label:'🎵 TikTok',fmt:'roteiro de vídeo curto: gancho nos 3s, falas por cena, legenda e hashtags'},
+  {id:'meta_ads',label:'📢 Meta Ads',fmt:'anúncio pago: Título (até 40 car.), Texto principal (até 125 car.), Descrição, CTA e público'},
+  {id:'tiktok_ads',label:'🚀 TikTok Ads',fmt:'anúncio pago TikTok: roteiro do vídeo, texto (até 100 car.), gancho, CTA e público'}
+];
+const PROVIDERS=[{id:'anthropic',label:'🟣 Claude'},{id:'openai',label:'🟢 ChatGPT'},{id:'gemini',label:'🔵 Gemini'}];
+// ---- Builder "Criar post" (6 etapas independentes) ----
+const PLATFORMS=[{id:'ig_feed',label:'Instagram Feed'},{id:'ig_story',label:'Instagram Stories'},{id:'meta_ads',label:'Meta Ads'},{id:'tiktok',label:'TikTok'}];
+const FORMATS_FEED=['Carrossel','Imagem Única','Infográfico','Comparativo','Antes e Depois','Linha do Tempo','Print Comentado','Gibi (HQ)','Tirinha','Quote'];
+const FORMATS_STORIES=['Story Único','Sequência de Stories','Enquete','Quiz','Caixa de Perguntas','Contagem Regressiva','Bastidores','Oferta','Tutorial'];
+const OBJECTIVES=['Gerar vendas','Gerar leads','Gerar autoridade','Educar','Engajar','Viralizar','Fortalecer a marca','Humanizar a empresa','Quebrar objeções','Captar contatos','Aumentar compartilhamentos','Aumentar comentários','Direcionar para WhatsApp','Direcionar para o site'];
+const STYLES=[
+  {g:'Educativo',items:['Informativo','Tutorial','Guia','Passo a passo','Curiosidades','FAQ']},
+  {g:'Storytelling',items:['História de cliente','História da empresa','Caso real','Jornada','Transformação']},
+  {g:'Humor',items:['Meme','Gibi','Tirinha','Ironia','Expectativa × Realidade']},
+  {g:'Comercial',items:['Oferta','Promoção','Lançamento','Escassez','Benefícios']},
+  {g:'Autoridade',items:['Dados','Estatísticas','Pesquisa','Estudo de caso','Bastidores']},
+  {g:'Engajamento',items:['Perguntas','Quiz','Enquete']},
+  {g:'Polêmico',items:['Mito ou Verdade','O que ninguém te conta','Erros comuns','Verdades inconvenientes']},
+  {g:'Viral',items:['Trend','Curiosidade']}
+];
+const COPY=['AIDA','PAS','Problema → Solução','Antes → Depois','Mito → Verdade','Erro → Correção','Lista','Ranking','Checklist','Pergunta → Resposta','Tutorial','Linha do Tempo','Comparação','FAQ','Gancho → Desenvolvimento → CTA','Objeção → Quebra de Objeção → CTA'];
+const VISUALS=['Inspirar-se nas referências enviadas','Premium','Moderno','Minimalista','Clean','Editorial','Corporativo','Luxuoso','Futurista','Tech','Cartoon','HQ','Retrô','Vintage','Glassmorphism','Flat Design','3D','Fotográfico','Cinematográfico','Ilustração Digital'];
+const DATES=[
+  {d:1,m:1,nome:'Ano Novo',tipo:'nac',dica:'Recomeço, metas, economia no ano novo'},
+  {d:25,m:1,nome:'Volta às aulas',tipo:'nac',dica:'Rotina, organização, economia doméstica'},
+  {d:17,m:2,nome:'Carnaval 2026',tipo:'nac',dica:'Horário de funcionamento, energia pra folia'},
+  {d:8,m:3,nome:'Dia da Mulher',tipo:'nac',dica:'Homenagem a clientes e equipe'},
+  {d:15,m:3,nome:'Dia do Consumidor',tipo:'nac',dica:'Grande data de ofertas'},
+  {d:22,m:3,nome:'Dia Mundial da Água',tipo:'sol',dica:'Sustentabilidade, energia limpa'},
+  {d:28,m:3,nome:'Hora do Planeta',tipo:'sol',dica:'Consumo consciente de energia'},
+  {d:1,m:4,nome:'Dia da Mentira',tipo:'nac',dica:'Quebrar mitos da energia solar com humor'},
+  {d:5,m:4,nome:'Páscoa 2026',tipo:'nac',dica:'Mensagem de marca'},
+  {d:21,m:4,nome:'Tiradentes',tipo:'nac',dica:'Feriado — aviso de funcionamento'},
+  {d:22,m:4,nome:'Dia da Terra',tipo:'sol',dica:'Energia renovável, pegada de carbono'},
+  {d:1,m:5,nome:'Dia do Trabalho',tipo:'nac',dica:'Valorização da equipe técnica'},
+  {d:10,m:5,nome:'Dia das Mães 2026',tipo:'nac',dica:'Presente/economia pra casa'},
+  {d:29,m:5,nome:'Dia Mundial da Energia',tipo:'sol',dica:'Data-chave! Eficiência e economia'},
+  {d:5,m:6,nome:'Dia do Meio Ambiente',tipo:'sol',dica:'Energia limpa como solução'},
+  {d:11,m:6,nome:'Copa do Mundo 2026',tipo:'esp',dica:'11/06 a 19/07 — clima de jogo'},
+  {d:12,m:6,nome:'Dia dos Namorados',tipo:'nac',dica:'Presente que economiza'},
+  {d:24,m:6,nome:'São João / Juninas',tipo:'nac',dica:'Tradição regional'},
+  {d:20,m:7,nome:'Dia do Amigo',tipo:'nac',dica:'Programa de indicação'},
+  {d:26,m:7,nome:'Data Magna de Goiás',tipo:'go',dica:'Orgulho goiano'},
+  {d:9,m:8,nome:'Dia dos Pais 2026',tipo:'nac',dica:'Presente/investimento'},
+  {d:7,m:9,nome:'Independência',tipo:'nac',dica:'Feriado nacional'},
+  {d:15,m:9,nome:'Dia do Cliente',tipo:'nac',dica:'Agradecimento e oferta exclusiva'},
+  {d:21,m:9,nome:'Dia da Árvore',tipo:'sol',dica:'Sustentabilidade e energia verde'},
+  {d:23,m:9,nome:'Primavera',tipo:'nac',dica:'Mais sol = mais geração'},
+  {d:12,m:10,nome:'Dia das Crianças',tipo:'nac',dica:'Futuro, família, casa protegida'},
+  {d:15,m:10,nome:'Dia do Professor',tipo:'nac',dica:'Homenagem'},
+  {d:24,m:10,nome:'Aniversário de Goiânia',tipo:'go',dica:'Regional'},
+  {d:31,m:10,nome:'Aniversário de Mineiros',tipo:'min',dica:'Orgulho local, post especial'},
+  {d:2,m:11,nome:'Finados',tipo:'nac',dica:'Feriado — aviso de funcionamento'},
+  {d:15,m:11,nome:'Proclamação da República',tipo:'nac',dica:'Feriado nacional'},
+  {d:20,m:11,nome:'Consciência Negra',tipo:'nac',dica:'Respeito e representatividade'},
+  {d:27,m:11,nome:'Black Friday 2026',tipo:'esp',dica:'MAIOR data — campanha completa'},
+  {d:25,m:12,nome:'Natal',tipo:'nac',dica:'Mensagem + oferta de fim de ano'},
+  {d:31,m:12,nome:'Réveillon',tipo:'nac',dica:'Retrospectiva e metas'}
+];
+const DATE_TIPOS={nac:'Nacional',go:'Goiás',min:'Mineiros',esp:'Especial',sol:'Solar'};
+const MESES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+/* ==================== PERSISTÊNCIA / USUÁRIOS ==================== */
+const USERS_KEY='lena_users';
+let CUR=null;
+function defaults(){return{
+  profile:{}, dna:'', logo:'', colors:'',
+  ai:{provider:'anthropic',keys:{},models:{anthropic:'claude-sonnet-4-5',openai:'gpt-4o',gemini:'gemini-2.0-flash'}},
+  saved:[], theme:'light', sel:{market:'solar',channel:'ig_feed'}, dateFilter:'all',
+  marketChosen:false, usage:'', usageChosen:false, onboarded:false, notes:'',
+  builder:{platform:'ig_feed',format:'Carrossel',objective:'Gerar leads',style:'Informativo',styleGroup:'Educativo',copy:'AIDA',visual:'Inspirar-se nas referências enviadas'},
+  kits:[{p:'',v:''},{p:'',v:''},{p:'',v:''},{p:'',v:''},{p:'',v:''},{p:'',v:''},{p:'',v:''},{p:'',v:''},{p:'',v:''},{p:'',v:''}],
+  kitsPlatform:'ig_feed', kitsMonth:(new Date().getMonth()+1), kitsMode:'novas', kitsDNA:'', imgModel:'dall-e-3',
+  maint:{platform:'ig_feed',topic:'Importância da limpeza das placas',goal:'Agendar manutenção/limpeza'},
+  logoPos:'auto', insights:[]
+};}
+const MESES_FULL=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const MONTH_CAMPAIGNS={1:'Ano Novo',4:'Páscoa',5:'Dia das Mães',6:'Festa Junina',8:'Dia dos Pais',9:'Primavera',10:'Dia das Crianças',11:'Black Friday',12:'Natal'};
+function campaignFor(m){return MONTH_CAMPAIGNS[m]||MESES_FULL[m-1];}
+const MAINT_TOPICS=['Importância da limpeza das placas','Sinais de que as placas precisam de limpeza','Queda na geração por sujeira','Antes e depois da limpeza','Manutenção preventiva do sistema','Frequência ideal de limpeza','Riscos de não fazer manutenção','Agende sua limpeza/manutenção','Limpeza na época de seca e poeira','Cuidados após o período de chuvas','Garantia de eficiência e vida útil','Checklist de manutenção'];
+const MAINT_PLATS={ig_feed:'Instagram Feed',ig_story:'Instagram Story',meta_ads:'Meta Ads'};
+const GOIAS={name:'Goiás Energy',city:'Mineiros',state:'GO',region:'Sudoeste goiano',
+  audience:'Famílias, comércios e produtores rurais',
+  products:'Kits de energia solar residenciais, comerciais e rurais; instalação; manutenção e limpeza de placas',
+  tone:'Confiável, próximo e sustentável',goals:'Gerar leads no WhatsApp e autoridade local'};
+let state=defaults();
+let PROFILE=null;                          // {id,name,role}
+function keyStoreKey(){return 'lena_keys_'+CUR;}
+function loadKeys(){try{const k=JSON.parse(localStorage.getItem(keyStoreKey()));if(k&&typeof k==='object')state.ai.keys=k;}catch(e){}}
+function saveKeys(){if(CUR)localStorage.setItem(keyStoreKey(),JSON.stringify(state.ai.keys||{}));}
+let _saveT=null;
+function save(){                            // chaves de IA ficam locais; o resto vai pro Supabase (debounce)
+  saveKeys(); if(!CUR||!sb)return;
+  clearTimeout(_saveT);
+  _saveT=setTimeout(async()=>{try{const s=JSON.parse(JSON.stringify(state));if(s.ai)delete s.ai.keys;await sb.from('profiles').update({state:s}).eq('id',CUR);}catch(e){console.warn('save falhou',e);}},700);
+}
+function curUser(){return PROFILE;}
+
+/* ==================== HELPERS ==================== */
+const $=s=>document.querySelector(s);const $$=s=>document.querySelectorAll(s);
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2800);}
+function applyTheme(){document.body.setAttribute('data-theme',state.theme);const b=$('#themeToggle');if(b)b.textContent=state.theme==='light'?'🌙':'☀️';applyBrandTheme();}
+function _hx(c){c=c.replace('#','');if(c.length===3)c=c.split('').map(x=>x+x).join('');const n=parseInt(c,16);return{r:(n>>16)&255,g:(n>>8)&255,b:n&255};}
+function _toHex(o){const h=x=>('0'+Math.max(0,Math.min(255,Math.round(x))).toString(16)).slice(-2);return '#'+h(o.r)+h(o.g)+h(o.b);}
+function _mix(a,b,t){return{r:a.r+(b.r-a.r)*t,g:a.g+(b.g-a.g)*t,b:a.b+(b.b-a.b)*t};}
+function applyBrandTheme(){
+  const root=document.documentElement.style;
+  const keys=['--accent','--accent-2','--accent-soft','--accent-ink','--neon','--glass-brd'];
+  const clear=()=>keys.forEach(k=>root.removeProperty(k));
+  if(state.usage!=='empresa'){clear();return;}
+  const hex=(state.colors||'').match(/#[0-9a-fA-F]{6}|#[0-9a-fA-F]{3}/g);
+  if(!hex||!hex.length){clear();return;}
+  const WH={r:255,g:255,b:255},BK={r:0,g:0,b:0},dark=state.theme==='dark';
+  const prim=_hx(hex[0]);
+  root.setProperty('--accent',_toHex(prim));
+  root.setProperty('--accent-2',_toHex(_mix(prim,BK,0.18)));
+  root.setProperty('--neon','rgba('+Math.round(prim.r)+','+Math.round(prim.g)+','+Math.round(prim.b)+',.32)');
+  root.setProperty('--glass-brd','rgba('+Math.round(prim.r)+','+Math.round(prim.g)+','+Math.round(prim.b)+',.20)');
+  if(dark){root.setProperty('--accent-soft',_toHex(_mix(prim,BK,0.78)));root.setProperty('--accent-ink',_toHex(_mix(prim,WH,0.55)));}
+  else{root.setProperty('--accent-soft',_toHex(_mix(prim,WH,0.86)));root.setProperty('--accent-ink',_toHex(_mix(prim,BK,0.35)));}
+}
+function logoSVG(){return '<svg viewBox="0 0 120 118"><g fill="#fff">'
++'<path d="M60 61 C 43 43,45 22,60 18 C 75 22,77 43,60 61 Z" transform="rotate(0 60 60)"/>'
++'<path d="M60 61 C 43 43,45 22,60 18 C 75 22,77 43,60 61 Z" transform="rotate(120 60 60)"/>'
++'<path d="M60 61 C 43 43,45 22,60 18 C 75 22,77 43,60 61 Z" transform="rotate(240 60 60)"/>'
++'</g><path d="M60 60 L60 100" stroke="#fff" stroke-width="6.5" stroke-linecap="round"/><circle cx="60" cy="102" r="3.4" fill="#fff"/></svg>';}
+function setLogos(){['#authLogo','#mktLogo','#usageLogo','#wizLogo','#brandLogo'].forEach(s=>{const e=$(s);if(e)e.innerHTML=logoSVG();});}
+
+/* ==================== AUTENTICAÇÃO (Supabase) ==================== */
+let authMode='login';
+function showAuth(mode){
+  authMode=mode;$('#authScreen').classList.remove('hide');$('#mktScreen').classList.add('hide');$('#wizScreen').classList.add('hide');$('#appRoot').style.display='none';
+  setLogos();$('#au_err').textContent='';$('#au_pass').value='';const ar=$('#authRole');if(ar)ar.classList.add('hide');
+  if(mode==='signup'){
+    $('#authTitle').textContent='Criar seu acesso';$('#authSub').textContent='Cadastre-se com e-mail e senha.';
+    $('#fName').classList.remove('hide');$('#au_btn').textContent='Criar acesso';
+    $('#au_alt').innerHTML='Já tem conta? <a id="toLogin">Entrar</a>';$('#toLogin').onclick=()=>showAuth('login');
+  } else {
+    $('#authTitle').textContent='Bem-vindo à LENA';$('#authSub').textContent='Entre com seu e-mail e senha.';
+    $('#fName').classList.add('hide');$('#au_btn').textContent='Entrar';
+    $('#au_alt').innerHTML='Novo por aqui? <a id="toSignup">Criar acesso</a> · <a id="toReset">Esqueci a senha</a>';
+    $('#toSignup').onclick=()=>showAuth('signup');$('#toReset').onclick=doReset;
+  }
+}
+function trad(m){m=m||'';if(/Invalid login/i.test(m))return 'E-mail ou senha incorretos.';if(/already registered/i.test(m))return 'Este e-mail já tem conta. Faça login.';if(/rate limit/i.test(m))return 'Muitas tentativas. Aguarde um pouco.';if(/Email logins are disabled/i.test(m))return 'Ative o provedor Email no Supabase (Authentication → Providers → Email).';return m;}
+async function doAuth(){
+  if(!sb){$('#au_err').textContent='Não carregou a biblioteca do Supabase. Recarregue a página.';return;}
+  const err=$('#au_err');err.textContent='';
+  const name=v('au_name'),email=v('au_email'),pass=$('#au_pass').value;
+  if(!email||email.indexOf('@')<0){err.textContent='Digite um e-mail válido.';return;}
+  if(pass.length<6){err.textContent='A senha precisa de pelo menos 6 caracteres.';return;}
+  const btn=$('#au_btn'),o=btn.textContent;btn.disabled=true;btn.textContent='Aguarde…';
+  try{
+    if(authMode==='signup'){
+      if(name.length<2){err.textContent='Digite seu nome.';btn.disabled=false;btn.textContent=o;return;}
+      const {data,error}=await sb.auth.signUp({email,password:pass,options:{data:{name}}});
+      if(error){err.textContent=trad(error.message);btn.disabled=false;btn.textContent=o;return;}
+      if(!data.session){toast('Confira seu e-mail para confirmar o cadastro.');showAuth('login');btn.disabled=false;btn.textContent=o;return;}
+      await route();
+    } else {
+      const {error}=await sb.auth.signInWithPassword({email,password:pass});
+      if(error){err.textContent=trad(error.message);btn.disabled=false;btn.textContent=o;return;}
+      await route();
+    }
+  }catch(e){err.textContent=e.message;btn.disabled=false;btn.textContent=o;}
+}
+async function doReset(){const email=v('au_email');if(!email){toast('Digite seu e-mail no campo acima');return;}const {error}=await sb.auth.resetPasswordForEmail(email);if(error)toast('Erro: '+error.message);else toast('Enviamos um link de redefinição para seu e-mail.');}
+$('#au_btn').onclick=doAuth;
+['au_email','au_pass','au_name'].forEach(id=>{const e=$('#'+id);if(e)e.addEventListener('keydown',ev=>{if(ev.key==='Enter')doAuth();});});
+
+/* ==================== ROTEAMENTO ==================== */
+async function route(){
+  if(!sb){showAuth('login');return;}
+  let session=null;try{const r=await sb.auth.getSession();session=r.data.session;}catch(e){}
+  if(!session){showAuth('login');return;}
+  const uid=session.user.id;let prof=null;
+  for(let i=0;i<4&&!prof;i++){try{const {data}=await sb.from('profiles').select('*').eq('id',uid).maybeSingle();prof=data;}catch(e){}if(!prof)await new Promise(r=>setTimeout(r,500));}
+  if(!prof){showAuth('login');toast('Perfil não encontrado. Tente entrar de novo.');return;}
+  CUR=prof.id;PROFILE={id:prof.id,name:prof.name||'Usuário',role:prof.role||'user'};
+  state=Object.assign(defaults(),prof.state||{});loadKeys();
+  flow();
+}
+function flow(){
+  $('#authScreen').classList.add('hide');
+  if(!state.marketChosen){showMarket();return;}
+  if(!state.usageChosen){showUsage();return;}
+  if(state.usage==='empresa'&&!state.onboarded){startWizard();return;}
+  showApp();
+}
+function showUsage(){
+  $('#usageScreen').classList.remove('hide');$('#mktScreen').classList.add('hide');$('#wizScreen').classList.add('hide');$('#appRoot').style.display='none';setLogos();
+  const menu=$('#uddMenu');
+  menu.innerHTML=[['empresa','🏢','Para minha empresa'],['pessoal','👤','Para uso pessoal']].map(([id,em,nm])=>`<div class="dd-item" data-u="${id}"><span class="em">${em}</span><span>${nm}</span></div>`).join('');
+  $('#uddLabel').textContent='Selecione uma opção';$('#uddBtn').classList.remove('open');menu.classList.add('hide');
+  $('#uddBtn').onclick=e=>{e.stopPropagation();$('#uddBtn').classList.toggle('open');menu.classList.toggle('hide');};
+  menu.querySelectorAll('.dd-item').forEach(it=>it.onclick=()=>{
+    state.usage=it.dataset.u;state.usageChosen=true;if(it.dataset.u==='pessoal')state.onboarded=true;
+    $('#uddLabel').textContent=it.textContent.trim();$('#uddBtn').classList.remove('open');menu.classList.add('hide');save();setTimeout(flow,120);});
+}
+document.addEventListener('click',()=>{const b=$('#uddBtn'),m=$('#uddMenu');if(b&&m){b.classList.remove('open');m.classList.add('hide');}});
+function showMarket(){
+  $('#mktScreen').classList.remove('hide');$('#wizScreen').classList.add('hide');$('#appRoot').style.display='none';setLogos();
+  const menu=$('#ddMenu');
+  menu.innerHTML=MARKETS.map(m=>{const soon=m.id!=='solar';return `<div class="dd-item ${soon?'soon':''}" data-m="${m.id}"><span class="em">${m.emoji}</span><span>${m.name}</span>${soon?'<span class="st">Em breve</span>':''}</div>`;}).join('');
+  $('#ddLabel').textContent='Selecione um mercado';
+  $('#ddBtn').classList.remove('open');menu.classList.add('hide');
+  $('#ddBtn').onclick=e=>{e.stopPropagation();$('#ddBtn').classList.toggle('open');menu.classList.toggle('hide');};
+  menu.querySelectorAll('.dd-item').forEach(it=>{if(!it.classList.contains('soon'))it.onclick=()=>{
+    const mk=MARKETS.find(x=>x.id===it.dataset.m);$('#ddLabel').textContent=mk.name;$('#ddLabel').style.color='var(--text)';
+    $('#ddBtn').classList.remove('open');menu.classList.add('hide');
+    state.sel.market=it.dataset.m;state.marketChosen=true;save();setTimeout(flow,120);};});
+}
+document.addEventListener('click',()=>{const b=$('#ddBtn'),m=$('#ddMenu');if(b&&m){b.classList.remove('open');m.classList.add('hide');}});
+function showApp(){
+  $('#mktScreen').classList.add('hide');$('#wizScreen').classList.add('hide');$('#authScreen').classList.add('hide');$('#appRoot').style.display='block';
+  setLogos();applyTheme();buildStatic();renderAll();nav('home');
+}
+
+/* ==================== ONBOARDING WIZARD ==================== */
+let wizStep=0;const WIZ_TOTAL=3;let wizBook=[],wizPosts=[],wizLogo=null;
+function startWizard(){wizStep=0;wizBook=[];wizPosts=[];wizLogo=state.logo?{dataURL:state.logo,mime:'image/png',b64:(state.logo.split(',')[1]||'')}:null;$('#wizScreen').classList.remove('hide');$('#appRoot').style.display='none';setLogos();applyTheme();renderWiz();}
+function renderWiz(){
+  $('#wizErr').textContent='';
+  $('#wizSteps').innerHTML=[0,1,2].map(i=>`<div class="st ${i<=wizStep?'on':''}"></div>`).join('');
+  const p=state.profile;
+  let h='';
+  if(wizStep===0){
+    h=`<h2>Sua empresa</h2><div class="subt">Dados básicos e de contato.</div>
+    <div class="field"><label>Nome da empresa *</label><input type="text" id="w_name" value="${esc(p.name||GOIAS.name)}"></div>
+    <div class="three-col">
+      <div class="field"><label>Cidade *</label><input type="text" id="w_city" value="${esc(p.city||GOIAS.city)}"></div>
+      <div class="field"><label>Estado *</label><input type="text" id="w_state" value="${esc(p.state||GOIAS.state)}"></div>
+      <div class="field"><label>Região</label><input type="text" id="w_region" value="${esc(p.region||GOIAS.region)}"></div>
+    </div>
+    <div class="field"><label>Endereço</label><input type="text" id="w_address" value="${esc(p.address)}"></div>
+    <div class="two-col">
+      <div class="field"><label>Telefone</label><input type="tel" id="w_phone" value="${esc(p.phone)}"></div>
+      <div class="field"><label>WhatsApp</label><input type="tel" id="w_whatsapp" value="${esc(p.whatsapp)}"></div>
+    </div>
+    <div class="two-col">
+      <div class="field"><label>Site</label><input type="text" id="w_site" value="${esc(p.site)}"></div>
+      <div class="field"><label>Redes sociais</label><input type="text" id="w_social" value="${esc(p.social)}"></div>
+    </div>`;
+  } else if(wizStep===1){
+    h=`<h2>Posicionamento</h2><div class="subt">O que faz sua marca única.</div>
+    <div class="field"><label>Público-alvo *</label><input type="text" id="w_audience" value="${esc(p.audience||GOIAS.audience)}" placeholder="Famílias, comércios, produtores rurais"></div>
+    <div class="field"><label>Diferenciais</label><textarea id="w_diff" placeholder="Financiamento próprio, equipe técnica...">${esc(p.diff)}</textarea></div>
+    <div class="field"><label>Principais produtos e serviços *</label><textarea id="w_products" placeholder="Kits residenciais/comerciais/rurais, instalação, manutenção e limpeza...">${esc(p.products||GOIAS.products)}</textarea></div>
+    <div class="two-col">
+      <div class="field"><label>Tom de comunicação</label><input type="text" id="w_tone" value="${esc(p.tone||GOIAS.tone)}" placeholder="Confiável, próximo, sustentável"></div>
+      <div class="field"><label>Objetivos de marketing</label><input type="text" id="w_goals" value="${esc(p.goals||GOIAS.goals)}" placeholder="Leads no WhatsApp, autoridade local"></div>
+    </div>`;
+  } else {
+    h=`<h2>Materiais da marca <span style="font-weight:600;color:var(--text-mute);font-size:13px">(opcional)</span></h2>
+    <div class="subt">Anexar estes materiais faz a LENA gerar conteúdos <b>muito mais personalizados</b> e fiéis à sua identidade. Sem eles, seguimos com boas práticas de design e marketing para o seu mercado.</div>
+    <div class="mat"><div class="mat-h">📘 Manual da Marca (Brand Book)</div><div class="mat-d">Identidade visual, paleta de cores, tipografia, tom e diretrizes.</div>
+      <div class="uploader sm" id="upBook">📎 Anexar (imagens/prints)<input type="file" id="fBook" accept="image/*" multiple class="hide"></div><div class="thumbs" id="thBook"></div></div>
+    <div class="mat"><div class="mat-h">🎯 Logotipo</div><div class="mat-d">Usado como referência nas artes, campanhas e materiais.</div>
+      <div class="uploader sm" id="upLogo">📎 Anexar logo<input type="file" id="fLogo" accept="image/*" class="hide"></div><div class="thumbs" id="thLogo"></div></div>
+    <div class="mat"><div class="mat-h">🖼️ Posts antigos</div><div class="mat-d">Vários posts já publicados nas redes, para aprender o padrão.</div>
+      <div class="uploader sm" id="upPosts">📎 Anexar posts<input type="file" id="fPosts" accept="image/*" multiple class="hide"></div><div class="thumbs" id="thPosts"></div></div>
+    <div class="mat"><div class="mat-h">🎨 Cores oficiais</div><div class="mat-d">Informe os códigos (HEX de preferência, ex: #0F4C81; aceita RGB/CMYK). Se anexar o Brand Book ou o logo, a LENA tenta extrair automaticamente ao analisar.</div>
+      <input type="text" id="w_colors" value="${esc(state.colors)}" placeholder="#0F4C81, #F5A623, rgb(15,76,129)"><div class="swatches" id="w_swatches"></div></div>
+    <div class="btn-row" style="margin-top:4px"><button class="btn btn-ghost" id="wizAnalyze">🧠 Analisar materiais com IA</button></div>
+    <div class="field" style="margin-top:12px"><label>DNA da marca (aparece após analisar — editável)</label><textarea id="w_dna" style="min-height:110px" placeholder="Pode pular e fazer depois em Ajustes › Empresa.">${esc(state.dna)}</textarea></div>
+    <div class="hint" style="font-size:11px;color:var(--text-mute)">Sem chave de IA? Pode pular e analisar depois. As imagens não são salvas — só o resumo (o logo é guardado).</div>`;
+  }
+  $('#wizBody').innerHTML=h;
+  $('#wizBack').style.visibility=wizStep===0?'hidden':'visible';
+  $('#wizNext').textContent=wizStep===WIZ_TOTAL-1?'Concluir ✓':'Continuar →';
+  if(wizStep===2)wizBindUpload();
+}
+function collectWiz(){
+  const p=state.profile;
+  if(wizStep===0){
+    if(!v('w_name')){wizErr('Informe o nome da empresa.');return false;}
+    if(!v('w_city')||!v('w_state')){wizErr('Informe cidade e estado.');return false;}
+    p.name=v('w_name');p.city=v('w_city');p.state=v('w_state');p.region=v('w_region');p.address=v('w_address');p.phone=v('w_phone');p.whatsapp=v('w_whatsapp');p.site=v('w_site');p.social=v('w_social');
+  } else if(wizStep===1){
+    if(!v('w_audience')){wizErr('Informe o público-alvo.');return false;}
+    if(!v('w_products')){wizErr('Informe os principais produtos/serviços.');return false;}
+    p.audience=v('w_audience');p.diff=v('w_diff');p.products=v('w_products');p.tone=v('w_tone');p.goals=v('w_goals');
+  } else {
+    state.dna=v('w_dna');state.colors=v('w_colors');
+  }
+  save();return true;
+}
+function wizErr(m){$('#wizErr').textContent=m;}
+$('#wizNext').onclick=()=>{if(!collectWiz())return;if(wizStep<WIZ_TOTAL-1){wizStep++;renderWiz();}else{state.onboarded=true;save();showApp();toast('Tudo pronto, '+(curUser()?curUser().name:'')+'! 🚀');}};
+$('#wizBack').onclick=()=>{if(wizStep>0){collectWiz();wizStep--;renderWiz();}};
+function wizBindUpload(){
+  const b=$('#upBook'),bf=$('#fBook');if(b){b.onclick=()=>bf.click();bf.onchange=async()=>{for(const file of bf.files){if(wizBook.length>=4){toast('Máximo 4');break;}const im=await fileToImg(file);if(im)wizBook.push(im);}renderMats();};}
+  const l=$('#upLogo'),lf=$('#fLogo');if(l){l.onclick=()=>lf.click();lf.onchange=async()=>{const im=await fileToImg(lf.files[0]);if(im){wizLogo=im;state.logo=im.dataURL;save();}renderMats();};}
+  const p=$('#upPosts'),pf=$('#fPosts');if(p){p.onclick=()=>pf.click();pf.onchange=async()=>{for(const file of pf.files){if(wizPosts.length>=6){toast('Máximo 6');break;}const im=await fileToImg(file);if(im)wizPosts.push(im);}renderMats();};}
+  const a=$('#wizAnalyze');if(a)a.onclick=()=>analyzeMaterials({book:wizBook,posts:wizPosts,logo:wizLogo},'w_dna','wizAnalyze');
+  bindColors('#w_colors','#w_swatches',false);
+  renderMats();
+}
+function thumbInto(sel,arr,onDel){const c=$(sel);if(!c)return;c.innerHTML=arr.map((im,i)=>`<div class="thumb-wrap"><img class="thumb" src="${im.dataURL}"><div class="thumb-x" data-i="${i}">×</div></div>`).join('');c.querySelectorAll('.thumb-x').forEach(x=>x.onclick=()=>onDel(+x.dataset.i));}
+function renderSwatches(text,sel){const c=$(sel);if(!c)return;const hex=(text||'').match(/#[0-9a-fA-F]{3,8}/g)||[];const rgb=(text||'').match(/rgba?\([^)]+\)/gi)||[];const cols=hex.concat(rgb).slice(0,12);c.innerHTML=cols.map(x=>`<span class="sw" style="background:${x}" title="${esc(x)}"></span>`).join('');}
+function bindColors(inputSel,swSel,persist){const cin=$(inputSel);if(!cin)return;renderSwatches(cin.value,swSel);cin.oninput=()=>{state.colors=cin.value.trim();if(persist)save();renderSwatches(cin.value,swSel);applyBrandTheme();};}
+function renderMats(){
+  thumbInto('#thBook',wizBook,i=>{wizBook.splice(i,1);renderMats();});
+  thumbInto('#thPosts',wizPosts,i=>{wizPosts.splice(i,1);renderMats();});
+  const tl=$('#thLogo');if(tl){tl.innerHTML=wizLogo?`<div class="thumb-wrap"><img class="thumb" src="${wizLogo.dataURL}"><div class="thumb-x">×</div></div>`:'';const x=tl.querySelector('.thumb-x');if(x)x.onclick=()=>{wizLogo=null;state.logo='';save();renderMats();};}
+}
+
+/* ==================== IMAGENS ==================== */
+function fileToImg(file){return new Promise(res=>{if(!file.type.startsWith('image/'))return res(null);const r=new FileReader();r.onload=()=>{const dataURL=r.result;res({mime:file.type,b64:dataURL.split(',')[1],dataURL});};r.onerror=()=>res(null);r.readAsDataURL(file);});}
+
+/* ==================== ANÁLISE DE ESTILO ==================== */
+async function analyzeMaterials(mats,targetId,btnId){
+  if(!state.ai.keys[state.ai.provider]){toast('Configure uma chave de IA em Ajustes › IA');return;}
+  const imgs=[].concat(mats.book||[],mats.logo?[mats.logo]:[],mats.posts||[]);
+  if(!imgs.length){toast('Anexe ao menos 1 material');return;}
+  const btn=$('#'+btnId);const o=btn?btn.innerHTML:'';if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Analisando...';}
+  const nBook=(mats.book||[]).length,hasLogo=!!mats.logo,nPosts=(mats.posts||[]).length;
+  const sys='Você é diretor de arte e estrategista de marca especializado em identidade visual e social media para energia solar.';
+  const usr=`Materiais recebidos de uma empresa de energia solar: ${nBook} imagem(ns) do Brand Book, ${hasLogo?'o logotipo':'sem logotipo'}, e ${nPosts} post(s) antigo(s). Analise TODOS e devolva o DNA da marca em tópicos objetivos e reutilizáveis, cobrindo:
+1) Estilo de design
+2) Paleta de cores (com códigos aproximados)
+3) Tipografia
+4) Estrutura dos layouts
+5) Linguagem e tom de comunicação
+6) Formato dos títulos
+7) Uso de elementos gráficos
+8) Posicionamento do logotipo
+9) Identidade visual geral
+10) Diretrizes práticas para manter consistência nos próximos posts, campanhas e criativos.
+Em português, específico e aplicável. Este resumo será usado como "espelho" para gerar novos conteúdos fiéis à marca.
+IMPORTANTE: na ÚLTIMA linha, isolada, escreva exatamente no formato: PALETA: #XXXXXX, #XXXXXX, #XXXXXX (as cores oficiais/predominantes em HEX que você identificou nos materiais/logo).`;
+  try{const out=await callAI(sys,usr,imgs);const t=$('#'+targetId);if(t)t.value=out.trim();state.dna=out.trim();
+    const pl=out.split('\n').find(l=>/^\s*PALETA\s*:/i.test(l));
+    if(pl){const cols=pl.replace(/.*PALETA\s*:/i,'').trim();if(cols&&!state.colors){state.colors=cols;['#w_colors','#p_colors'].forEach(s=>{const e=$(s);if(e)e.value=cols;});renderSwatches(cols,'#w_swatches');renderSwatches(cols,'#p_swatches');applyBrandTheme();}}
+    save();renderHome&&renderHome();toast('DNA da marca gerado ✓'+(state.colors?' · cores identificadas':''));}
+  catch(e){toast('Falhou: '+e.message);}
+  finally{if(btn){btn.disabled=false;btn.innerHTML=o;}}
+}
+
+/* ==================== CHAMADAS DE IA ==================== */
+async function callAI(system,user,images){
+  images=images||[];const p=state.ai.provider,key=state.ai.keys[p],model=state.ai.models[p];
+  if(!key)throw new Error('Sem chave para '+p+'.');
+  if(p==='anthropic'){
+    const content=[];images.forEach(im=>content.push({type:'image',source:{type:'base64',media_type:im.mime,data:im.b64}}));content.push({type:'text',text:user});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model,max_tokens:2200,system,messages:[{role:'user',content}]})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error&&j.error.message||'Erro Anthropic');return j.content.map(c=>c.text).join('');
+  }
+  if(p==='openai'){
+    const content=[{type:'text',text:user}];images.forEach(im=>content.push({type:'image_url',image_url:{url:im.dataURL}}));
+    const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+key},body:JSON.stringify({model,max_tokens:2200,temperature:.85,messages:[{role:'system',content:system},{role:'user',content}]})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error&&j.error.message||'Erro OpenAI');return j.choices[0].message.content;
+  }
+  if(p==='gemini'){
+    const parts=[{text:user}];images.forEach(im=>parts.push({inline_data:{mime_type:im.mime,data:im.b64}}));
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({system_instruction:{parts:[{text:system}]},contents:[{parts}]})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error&&j.error.message||'Erro Gemini');return (j.candidates&&j.candidates[0]&&j.candidates[0].content.parts.map(x=>x.text).join(''))||'(sem resposta)';
+  }
+}
+
+/* ==================== PROMPTS ==================== */
+function brandBlock(){
+  const p=state.profile;
+  const colorSeg=state.colors?'\nCORES OFICIAIS (use SEMPRE como padrão de cor em posts, criativos de anúncio, banners, artes, apresentações, landing pages e materiais institucionais — PRIORIZE estas cores): '+state.colors:(state.logo?'\n[Sem cores informadas: derive a paleta a partir do LOGOTIPO anexado e sugira os HEX predominantes.]':'\n[Sem cores nem logo: use uma paleta profissional compatível com energia solar (verdes, azul-confiança, amarelo-solar).]');
+  const dnaSeg=state.dna?'\nDNA/REFERÊNCIA VISUAL (use como ESPELHO e RESPEITE: design, paleta, tipografia, layout, títulos, tom, elementos gráficos, posicionamento do logo):\n'+state.dna:'';
+  const logoSeg=state.logo?'\n[Logotipo cadastrado — indique posicioná-lo conforme o padrão da marca.]':'';
+  const notesSeg=state.notes?'\nINFORMAÇÕES/CONTEXTO ADICIONAL: '+state.notes:'';
+  if(state.usage==='pessoal'){
+    return `CONTEXTO (modo pessoal — sem identidade corporativa fixa; use os materiais de referência abaixo, se houver, para alinhar os conteúdos ao objetivo do usuário):${colorSeg}${logoSeg}${dnaSeg}${notesSeg}`;
+  }
+  return `PERFIL DA EMPRESA (use SEMPRE — mercado: ENERGIA SOLAR):
+- Empresa: ${p.name||'Goiás Energy'} | Site: ${p.site||'-'}
+- Local: ${p.city||'Mineiros'}/${p.state||'GO'} ${p.region?'· '+p.region:''} ${p.address?'· '+p.address:''}
+- Contato: Tel ${p.phone||'-'} | WhatsApp ${p.whatsapp||'-'} | Redes: ${p.social||'-'}
+- Público-alvo: ${p.audience||GOIAS.audience}
+- Diferenciais: ${p.diff||'(n/d)'}
+- Produtos/serviços: ${p.products||GOIAS.products}
+- Tom de comunicação: ${p.tone||GOIAS.tone}
+- Objetivos de marketing: ${p.goals||GOIAS.goals}${colorSeg}${dnaSeg}${logoSeg}${notesSeg}`;
+}
+function sysBase(){return `Você é a LENA, uma agência de marketing especializada em ENERGIA SOLAR no Brasil. Escreve em português do Brasil, com estratégia de vendas e boas práticas de cada rede. Mantém consistência total com a identidade da marca. Nunca faz promessas enganosas.\n\n`+brandBlock();}
+
+function postPrompt(theme,channelId,goal){
+  const ch=CHANNELS.find(c=>c.id===channelId)||CHANNELS[0];
+  return `Canal: ${ch.label} → formato: ${ch.fmt}
+Objetivo: ${goal||'Vender / gerar leads'}
+Tema: ${theme}
+
+TAREFA: Escreva 1 post pronto para publicar seguindo o DNA da marca. Entregue nesta ordem:
+1) LEGENDA/COPY pronta (respeitando o formato do canal)
+2) 2 variações mais curtas
+3) Sugestão de imagem/roteiro alinhada ao estilo visual da marca
+4) CTA (use o WhatsApp/contato da empresa quando fizer sentido)
+5) Hashtags relevantes de energia solar + locais`;
+}
+function ideasPrompt(channelId,focus){
+  return `Canal alvo: ${(CHANNELS.find(c=>c.id===channelId)||{}).label||'Instagram'}
+Foco: ${focus||'geral de energia solar'}
+
+TAREFA: Liste 8 IDEIAS de conteúdo altamente relevantes para uma empresa de ENERGIA SOLAR, conectadas ao público e à região da empresa. Para cada uma: um TÍTULO curto e uma frase de ÂNGULO/gancho. Numere 1 a 8. Formato exato por linha: "N) Título — ângulo".`;
+}
+function campaignPrompt(){
+  const c={cities:v('cpCities'),st:v('cpState'),budget:v('cpBudget'),goal:val('cpGoal'),offer:v('cpOffer'),geo:v('cpGeo')};
+  return `BRIEFING DA CAMPANHA (energia solar):
+- Cidades: ${c.cities||'(n/d)'} | Estado: ${c.st||'(n/d)'}
+- Verba: ${c.budget||'(n/d)'}
+- Objetivo: ${c.goal}
+- Oferta/promoção: ${c.offer||'nenhuma'}
+- Restrição geográfica: ${c.geo||'nenhuma'}
+
+TAREFA: Aja como ESPECIALISTA EM TRÁFEGO PAGO para energia solar (Meta Ads e TikTok Ads). Entregue um plano estratégico, justificando cada escolha:
+1) Melhor tipo de campanha e por quê
+2) Melhor posicionamento dos anúncios (feed, stories, reels, etc.)
+3) Distribuição ideal do orçamento (com valores/percentuais)
+4) Segmentação sugerida (localização exata considerando as cidades/estado e restrições)
+5) Públicos recomendados para esse mercado/região
+6) Faixa etária indicada
+7) Interesses relevantes (liste)
+8) Públicos semelhantes (Lookalike) sugeridos
+9) Estratégias para reduzir o custo por resultado
+10) 2 criativos prontos (título + texto principal + descrição + CTA) no tom da marca`;
+}
+
+/* ==================== GERAÇÃO ==================== */
+let lastGen=null;
+async function runGen(mode,payload){
+  const key=state.ai.keys[state.ai.provider];
+  if(!key){toast('Configure uma chave de IA em Ajustes › IA');nav('settings');setStab('ai');return;}
+  lastGen={mode,payload};lastGenFn=()=>runGen(mode,payload);
+  const badge={post:'Post',ideas:'Ideias',campaign:'Campanha',date:'Post de data'}[mode]||'Resultado';
+  $('#resultCard').classList.remove('hide');$('#resultBadge').textContent=badge;
+  $('#resultBox').textContent='Criando com '+PROVIDERS.find(x=>x.id===state.ai.provider).label+'...';
+  $('#resultCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+  try{
+    let user;
+    if(mode==='post')user=postPrompt(payload.theme,payload.channel,payload.goal);
+    else if(mode==='ideas')user=ideasPrompt(payload.channel,payload.focus);
+    else if(mode==='campaign')user=campaignPrompt();
+    else if(mode==='date')user=postPrompt(payload.theme,payload.channel,'Divulgar data comemorativa');
+    const out=await callAI(sysBase(),user);
+    $('#resultBox').textContent=out.trim();
+    if(mode==='ideas')renderIdeaChoices(out.trim());
+  }catch(e){$('#resultBox').textContent='⚠️ '+e.message+'\n\nVerifique a chave, os créditos e o nome do modelo em Ajustes › IA.';}
+}
+$('#btnPost').onclick=()=>generatePost();
+$('#btnCampaign').onclick=()=>runGen('campaign',{});
+$('#btnIdeas').onclick=()=>runGen('ideas',{channel:valChannelI(),focus:v('ideaFocus')});
+
+let chosenIdea=null;
+function renderIdeaChoices(text){
+  const lines=text.split('\n').map(l=>l.trim()).filter(l=>/^\d+[\).]/.test(l));
+  if(!lines.length){$('#ideaList').innerHTML='';return;}
+  chosenIdea=null;$('#ideaCreateRow').classList.add('hide');
+  $('#ideaList').innerHTML=lines.map((l,i)=>{const clean=l.replace(/^\d+[\).]\s*/,'');const parts=clean.split('—');return `<button class="idea" data-i="${i}" data-t="${esc(clean)}"><div class="it">${esc(parts[0].trim())}</div>${parts[1]?`<div class="ia">${esc(parts.slice(1).join('—').trim())}</div>`:''}</button>`;}).join('');
+  $$('#ideaList .idea').forEach(b=>b.onclick=()=>{$$('#ideaList .idea').forEach(x=>x.classList.remove('active'));b.classList.add('active');chosenIdea=b.dataset.t;$('#ideaCreateRow').classList.remove('hide');});
+}
+$('#btnCreateFromIdea').onclick=()=>{if(!chosenIdea){toast('Escolha uma ideia');return;}setTab('post');$('#briefing').value=chosenIdea;generatePost();};
+
+$('#btnCopy').onclick=()=>{navigator.clipboard.writeText($('#resultBox').textContent);toast('Copiado!');};
+$('#btnRegen').onclick=()=>{if(lastGenFn)lastGenFn();};
+
+/* ===== BUILDER "Criar post" (6 etapas) ===== */
+let lastGenFn=null;
+function bopt(k,val,label,sel,g){return '<div class="bopt'+(sel?' sel':'')+'" data-k="'+k+'" data-v="'+esc(val)+'"'+(g?' data-g="'+esc(g)+'"':'')+'>'+esc(label)+'</div>';}
+function bfield(step,key,label,current,menuHTML){
+  return '<div class="bfield"><label><span class="n">'+step+'</span>'+label+'</label><div class="bdd">'+
+    '<button class="bdd-btn" data-tog="'+key+'">'+esc(current)+'<span class="cr">▾</span></button>'+
+    '<div class="bmenu hide" data-menu="'+key+'">'+menuHTML+'</div></div></div>';
+}
+function closeBuilderMenus(){const box=$('#builderBox');if(!box)return;box.querySelectorAll('.bmenu').forEach(m=>m.classList.add('hide'));box.querySelectorAll('.bdd-btn').forEach(b=>b.classList.remove('open'));}
+function renderBuilder(){
+  const b=state.builder;const box=$('#builderBox');if(!box)return;
+  let h='';
+  h+=bfield(1,'platform','Plataforma',(PLATFORMS.find(x=>x.id===b.platform)||{}).label,PLATFORMS.map(p=>bopt('platform',p.id,p.label,b.platform===p.id)).join(''));
+  const feed=b.platform==='ig_feed',story=b.platform==='ig_story';
+  if(feed||story){const list=feed?FORMATS_FEED:FORMATS_STORIES;
+    h+=bfield(2,'format','Formato',b.format,list.map(f=>bopt('format',f,f,b.format===f)).join('')+'<div class="bopt soon">Kits Promocionais · em breve</div>');
+  }else{
+    h+='<div class="bfield"><label><span class="n">2</span>Formato</label><div class="bnote">'+(b.platform==='meta_ads'?'Meta Ads: a IA gera automaticamente todas as peças para os posicionamentos — Feed, Stories, Reels, Explorar e Audience Network.':'TikTok: roteiro de vídeo curto vertical (9:16).')+'</div></div>';
+  }
+  h+=bfield(3,'objective','Objetivo',b.objective,OBJECTIVES.map(o=>bopt('objective',o,o,b.objective===o)).join(''));
+  let sMenu='';STYLES.forEach(s=>{sMenu+='<div class="grp">'+s.g+'</div>'+s.items.map(it=>bopt('style',it,it,b.style===it,s.g)).join('');});
+  h+=bfield(4,'style','Estilo de comunicação',(b.styleGroup?b.styleGroup+' — ':'')+b.style,sMenu);
+  h+=bfield(5,'copy','Estrutura da copy',b.copy,COPY.map(c=>bopt('copy',c,c,b.copy===c)).join(''));
+  h+=bfield(6,'visual','Direção visual',b.visual,VISUALS.map(x=>bopt('visual',x,x,b.visual===x)).join(''));
+  box.innerHTML=h;
+  box.querySelectorAll('.bdd-btn').forEach(btn=>btn.onclick=e=>{e.stopPropagation();const key=btn.dataset.tog;const menu=box.querySelector('.bmenu[data-menu="'+key+'"]');const isOpen=!menu.classList.contains('hide');closeBuilderMenus();if(!isOpen){menu.classList.remove('hide');btn.classList.add('open');}});
+  box.querySelectorAll('.bmenu').forEach(m=>m.onclick=e=>e.stopPropagation());
+  box.querySelectorAll('.bopt[data-k]').forEach(o=>{if(o.classList.contains('soon'))return;o.onclick=()=>{
+    const k=o.dataset.k;state.builder[k]=o.dataset.v;if(k==='style')state.builder.styleGroup=o.dataset.g||'';
+    if(k==='platform'){if(o.dataset.v==='ig_feed'&&!FORMATS_FEED.includes(state.builder.format))state.builder.format=FORMATS_FEED[0];if(o.dataset.v==='ig_story'&&!FORMATS_STORIES.includes(state.builder.format))state.builder.format=FORMATS_STORIES[0];}
+    save();renderBuilder();};});
+  renderBuilderSummary();
+}
+document.addEventListener('click',()=>closeBuilderMenus());
+function renderBuilderSummary(){
+  const b=state.builder;const plat=(PLATFORMS.find(x=>x.id===b.platform)||{}).label;const showFmt=b.platform==='ig_feed'||b.platform==='ig_story';
+  const el=$('#builderSummary');if(el)el.innerHTML='Vai gerar: <b>'+esc(plat)+'</b>'+(showFmt?' · <b>'+esc(b.format)+'</b>':' · <b>peças automáticas</b>')+' · objetivo <b>'+esc(b.objective)+'</b> · estilo <b>'+esc(b.style)+'</b> · copy <b>'+esc(b.copy)+'</b> · visual <b>'+esc(b.visual)+'</b>';
+}
+function builderPrompt(){
+  const b=state.builder;const theme=v('briefing');const plat=(PLATFORMS.find(x=>x.id===b.platform)||{}).label;
+  const meta=b.platform==='meta_ads',tk=b.platform==='tiktok';const refVisual=/refer/i.test(b.visual);
+  let platLine,fmtLine;
+  if(meta){platLine='Plataforma: Meta Ads (campanha paga completa).';fmtLine='Gere TODAS as peças necessárias e adapte o criativo para os posicionamentos: Feed, Stories, Reels, Explorar e Audience Network (quando aplicável). Separe a entrega por posicionamento e respeite as melhores práticas de cada um (proporção, limite de texto, gancho, CTA).';}
+  else if(tk){platLine='Plataforma: TikTok (vídeo curto vertical 9:16).';fmtLine='Formato: roteiro de vídeo — gancho nos 3s, cenas com falas, textos na tela, áudio/trend sugerido, legenda e hashtags.';}
+  else{platLine='Plataforma: '+plat+'.';fmtLine='Formato: '+b.format+'. Produza a estrutura correta desse formato (Carrossel = lâmina a lâmina com título e texto; Sequência de Stories = tela a tela; Infográfico = blocos de dados; Antes e Depois = comparação; Linha do Tempo = etapas; Comparativo = lado a lado; Quote = frase de impacto; etc.).';}
+  return platLine+'\n'+fmtLine+
+    '\nObjetivo principal (guie TODA a estratégia por ele): '+b.objective+
+    '\nEstilo de comunicação: '+(b.styleGroup?b.styleGroup+' — ':'')+b.style+
+    '\nEstrutura da copy (siga fielmente): '+b.copy+
+    '\nDireção visual (afeta APENAS o design/identidade gráfica, não a estratégia): '+b.visual+(refVisual?' — inspire-se nos POSTS DE REFERÊNCIA enviados no onboarding (identidade visual, composição, linguagem gráfica, tipografia), SEM copiar o conteúdo.':'')+
+    '\nTema/assunto: '+(theme||'(livre — escolha um tema relevante de energia solar para o objetivo)')+
+    '\n\nTAREFA: crie o conteúdo completo respeitando TODAS as escolhas acima e o perfil/DNA da marca. Entregue:\n1) Copy no formato correto (numere lâminas/telas; para Meta Ads separe por posicionamento).\n2) Direção visual por peça/lâmina (usando as CORES DA MARCA, composição e tipografia) coerente com a direção escolhida.\n3) CTA alinhado ao objetivo.\n4) Hashtags relevantes (energia solar + locais quando fizer sentido).';
+}
+async function generatePost(){
+  const key=state.ai.keys[state.ai.provider];
+  if(!key){toast('Configure uma chave de IA em Ajustes › IA');nav('settings');setStab('ai');return;}
+  lastGenFn=generatePost;
+  $('#resultCard').classList.remove('hide');$('#resultBadge').textContent='Post · '+((PLATFORMS.find(x=>x.id===state.builder.platform)||{}).label||'');
+  $('#resultBox').textContent='Criando com '+PROVIDERS.find(x=>x.id===state.ai.provider).label+'...';
+  $('#resultCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+  try{const out=await callAI(sysBase(),builderPrompt());$('#resultBox').textContent=out.trim();}
+  catch(e){$('#resultBox').textContent='⚠️ '+e.message+'\n\nVerifique a chave, os créditos e o modelo em Ajustes › IA.';}
+}
+
+/* ===== PROGRAMAÇÃO DE CONTEÚDO ===== */
+$('#btnPlanOpen').onclick=()=>nav('plan');
+$('#planBack').onclick=()=>nav('home');
+$('#planPeriod').onchange=()=>{$('#planDaysWrap').style.display=$('#planPeriod').value==='Personalizado'?'':'none';};
+function planPrompt(){
+  const period=val('planPeriod');const days=period==='Personalizado'?(parseInt(v('planDays'),10)||14):(period==='Mensal'?30:7);
+  const foco=v('planFoco');const today=new Date();
+  const list=DATES.map(x=>{let occ=new Date(today.getFullYear(),x.m-1,x.d);if(occ<today)occ=new Date(today.getFullYear()+1,x.m-1,x.d);return{x,occ};}).filter(o=>(o.occ-today)/864e5<=days&&(o.occ-today)>=-1).sort((a,b)=>a.occ-b.occ);
+  const datesStr=list.map(o=>o.x.d+'/'+o.x.m+' '+o.x.nome).join('; ')||'nenhuma no período';
+  return 'MÓDULO: PROGRAMAÇÃO DE CONTEÚDO — calendário editorial de '+days+' dias'+(period!=='Personalizado'?' ('+period.toLowerCase()+')':'')+'.\n'+
+    'Datas comemorativas no período: '+datesStr+'.\n'+(foco?'Foco extra do usuário: '+foco+'.\n':'')+
+    'Recursos da plataforma a variar: Plataformas (Instagram Feed, Instagram Story, Meta Ads, TikTok); Formatos (carrossel, imagem única, infográfico, antes e depois, quote, reels, sequência de stories, etc.); Estilos (educativo, storytelling, autoridade, humor, comercial, engajamento, polêmico); Objetivos (vendas, leads, autoridade, educar, engajar, WhatsApp).\n\n'+
+    'TAREFA: monte um CALENDÁRIO editorial estratégico para energia solar, dia a dia, EQUILIBRANDO conteúdos educativos, comerciais, de autoridade, engajamento, geração de leads e vendas — SEM repetir temas nem formatos em sequência. Aproveite as datas comemorativas do período e inclua Kits Promocionais e Manutenção/Limpeza quando fizer sentido. Para CADA publicação traga em uma linha: Dia/Data · Plataforma · Formato · Estilo · Objetivo · Tema (+ 1 frase de descrição). No fim, um breve resumo do balanço estratégico (quantos de cada tipo). Respeite o DNA, o público e as informações da marca.';
+}
+async function generatePlan(){
+  const key=state.ai.keys[state.ai.provider];if(!key){toast('Configure uma chave de IA em Ajustes › IA');nav('settings');setStab('ai');return;}
+  const btn=$('#btnPlan'),o=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Montando...';
+  $('#planResult').innerHTML='<div class="card"><div class="result">Criando o calendário com '+PROVIDERS.find(x=>x.id===state.ai.provider).label+'...</div></div>';
+  try{const out=await callAI(sysBase(),planPrompt());const txt=out.trim();
+    $('#planResult').innerHTML='<div class="card"><div class="result-head"><span class="badge">Programação · '+esc(val('planPeriod'))+'</span><div style="display:flex;gap:8px"><button class="mini-btn" id="planCopy">📋 Copiar</button><button class="mini-btn" id="planSaveBtn">📌 Salvar</button></div></div><div class="result">'+esc(txt)+'</div></div>';
+    $('#planCopy').onclick=()=>{navigator.clipboard.writeText(txt);toast('Copiado!');};
+    $('#planSaveBtn').onclick=()=>{state.saved.unshift({text:txt,tag:'Programação',when:new Date().toLocaleString('pt-BR')});save();renderSaved();renderHome();toast('Salvo em Posts ✓');};
+  }catch(e){$('#planResult').innerHTML='<div class="card"><div class="result">⚠️ '+esc(e.message)+'</div></div>';}
+  finally{btn.disabled=false;btn.innerHTML=o;}
+}
+$('#btnPlan').onclick=()=>generatePlan();
+
+/* ===== MANUTENÇÃO E LIMPEZA ===== */
+function renderMaint(){
+  const t=$('#mTopic');if(t&&!t._filled){t.innerHTML=MAINT_TOPICS.map(x=>'<option>'+x+'</option>').join('');t._filled=1;}
+  const p=$('#mPlatform');if(p){p.value=state.maint.platform;p.onchange=()=>{state.maint.platform=p.value;save();};}
+  const g=$('#mGoal');if(g){g.value=state.maint.goal;g.onchange=()=>{state.maint.goal=g.value;save();};}
+  if(t){t.value=state.maint.topic;t.onchange=()=>{state.maint.topic=t.value;save();};}
+}
+function maintPrompt(){
+  const plat=state.maint.platform;const platLabel=MAINT_PLATS[plat];const meta=plat==='meta_ads';
+  const topic=v('mTopicFree')||state.maint.topic;
+  const fmtLine=meta?'Gere as peças para os posicionamentos do Meta Ads (Feed, Stories, Reels, Explorar), cada uma com as melhores práticas.':(plat==='ig_story'?'Formato: Instagram Story (vertical), texto curto de impacto, sugestão de figurinha/enquete e CTA.':'Formato: Instagram Feed (legenda pronta + sugestão de imagem).');
+  return 'CONTEÚDO ESPECÍFICO: MANUTENÇÃO E LIMPEZA DE PLACAS SOLARES (energia solar fotovoltaica).\nPlataforma: '+platLabel+'. '+fmtLine+'\nFoco/tema: '+topic+'\nObjetivo: '+state.maint.goal+
+    '\n\nTAREFA: crie o conteúdo focado em manutenção e limpeza de sistemas fotovoltaicos — destaque a importância, o ganho de eficiência/economia ao manter as placas limpas, os riscos de não fazer, e chame para agendar o serviço. Respeite o DNA e as cores da marca. Entregue: copy pronta no formato do canal, sugestão visual/arte, CTA (WhatsApp/contato quando fizer sentido) e hashtags relevantes.';
+}
+async function generateMaint(){
+  const key=state.ai.keys[state.ai.provider];if(!key){toast('Configure uma chave de IA em Ajustes › IA');nav('settings');setStab('ai');return;}
+  lastGenFn=generateMaint;
+  $('#resultCard').classList.remove('hide');$('#resultBadge').textContent='Manutenção · '+MAINT_PLATS[state.maint.platform];
+  $('#resultBox').textContent='Criando com '+PROVIDERS.find(x=>x.id===state.ai.provider).label+'...';
+  $('#resultCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+  try{const out=await callAI(sysBase(),maintPrompt());$('#resultBox').textContent=out.trim();}
+  catch(e){$('#resultBox').textContent='⚠️ '+e.message+'\n\nVerifique a chave, os créditos e o modelo em Ajustes › IA.';}
+}
+$('#btnMaint').onclick=()=>generateMaint();
+
+/* ===== KITS PROMOCIONAIS ===== */
+let kitsImgs=[];
+function renderKitsModule(){
+  const ms=$('#kMonth');if(ms){if(!ms._filled){ms.innerHTML=MESES_FULL.map((m,i)=>'<option value="'+(i+1)+'">'+m+'</option>').join('');ms._filled=1;}ms.value=state.kitsMonth;ms.onchange=()=>{state.kitsMonth=+ms.value;save();updateKCampaign();};}
+  const ps=$('#kPlatform');if(ps){ps.value=state.kitsPlatform;ps.onchange=()=>{state.kitsPlatform=ps.value;save();};}
+  updateKCampaign();renderKitsRows();
+  const mc=$('#kModeChips');if(mc){mc.innerHTML=[['espelhar','🪞 Espelhar posts anexados'],['novas','✨ Gerar novas ideias']].map(([vv,l])=>'<button class="chip'+(state.kitsMode===vv?' active':'')+'" data-km="'+vv+'">'+l+'</button>').join('');mc.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{state.kitsMode=c.dataset.km;save();renderKitsModule();});}
+  const kd=$('#kDna');if(kd){kd.value=state.kitsDNA||'';kd.oninput=()=>{state.kitsDNA=kd.value;save();};}
+  const up=$('#kUploader'),f=$('#kFiles');if(up){up.onclick=()=>f.click();f.onchange=async()=>{for(const file of f.files){if(kitsImgs.length>=6){toast('Máximo 6');break;}const im=await fileToImg(file);if(im)kitsImgs.push(im);}renderKThumbs();};}
+  const ka=$('#kAnalyze');if(ka)ka.onclick=analyzeKits;
+  renderKThumbs();
+}
+function updateKCampaign(){const el=$('#kCampaignName');if(el)el.textContent='Campanha detectada: Kits Promocionais '+campaignFor(state.kitsMonth);}
+function renderKitsRows(){
+  const box=$('#kitsList');if(!box)return;let h='';
+  for(let i=0;i<10;i++){const k=state.kits[i]||{p:'',v:''};
+    h+='<div class="kit-row"><div class="kn">Kit '+(i+1)+'</div><input type="text" data-ki="'+i+'" data-kf="p" placeholder="Potência (kWp)" value="'+esc(k.p)+'"><input type="text" data-ki="'+i+'" data-kf="v" placeholder="Valor (R$)" value="'+esc(k.v)+'"></div>';}
+  box.innerHTML=h;
+  box.querySelectorAll('input').forEach(inp=>inp.oninput=()=>{const i=+inp.dataset.ki;state.kits[i]=state.kits[i]||{p:'',v:''};state.kits[i][inp.dataset.kf]=inp.value;save();});
+}
+function renderKThumbs(){const c=$('#kThumbs');if(!c)return;c.innerHTML=kitsImgs.map((im,i)=>'<div class="thumb-wrap"><img class="thumb" src="'+im.dataURL+'"><div class="thumb-x" data-i="'+i+'">×</div></div>').join('');c.querySelectorAll('.thumb-x').forEach(x=>x.onclick=()=>{kitsImgs.splice(+x.dataset.i,1);renderKThumbs();});}
+async function analyzeKits(){
+  if(!state.ai.keys[state.ai.provider]){toast('Configure uma chave de IA em Ajustes › IA');return;}
+  if(!kitsImgs.length){toast('Anexe ao menos 1 material');return;}
+  const btn=$('#kAnalyze'),o=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Aprendendo...';
+  const sys='Você é diretor de arte especializado em social media e artes de oferta para energia solar.';
+  const usr='Analise estas artes/posts de KITS PROMOCIONAIS e descreva o DNA visual em tópicos reutilizáveis: 1) Estrutura do layout; 2) Organização das informações; 3) Tipografia; 4) Paleta de cores (HEX); 5) Hierarquia visual; 6) Elementos gráficos; 7) Posicionamento do logotipo; 8) Estilo das ofertas (como mostram potência e preço); 9) Identidade visual geral. Em português, específico e prático.';
+  try{const out=await callAI(sys,usr,kitsImgs);$('#kDna').value=out.trim();state.kitsDNA=out.trim();save();toast('Estilo dos kits aprendido ✓');}
+  catch(e){toast('Falhou: '+e.message);}finally{btn.disabled=false;btn.innerHTML=o;}
+}
+function kitsPrompt(){
+  const plat=state.kitsPlatform==='ig_story'?'Instagram Story (9:16 vertical)':'Instagram Feed (1:1 ou 4:5)';
+  const camp='Kits Promocionais '+campaignFor(state.kitsMonth);
+  const filled=state.kits.map((k,i)=>({p:(k&&k.p||'').trim(),v:(k&&k.v||'').trim(),i:i+1})).filter(k=>k.p||k.v);
+  const list=filled.map(k=>'- Kit '+k.i+': Potência '+(k.p||'—')+' kWp · Valor '+(k.v||'—')).join('\n');
+  const mode=state.kitsMode==='espelhar'?'ESPELHAR: reproduza fielmente o estilo dos materiais de referência (DNA dos kits), criando novas artes inspiradas nesses modelos, SEM copiar o conteúdo.':'NOVAS IDEIAS: crie layouts inéditos e modernos, respeitando apenas a identidade da marca (cores, logo, tipografia, linguagem), sem copiar a estrutura dos posts anexados.';
+  return 'MÓDULO: KITS PROMOCIONAIS\nCampanha: '+camp+'\nPlataforma: '+plat+'\nModo de geração — '+mode+
+    (state.kitsDNA?'\n\nDNA VISUAL DOS KITS (referência de layout/estilo):\n'+state.kitsDNA:'')+
+    '\n\nKITS A ANUNCIAR:\n'+list+
+    '\n\nTAREFA: gere UMA ARTE por kit (numeradas: Kit 1, Kit 2...). Para CADA arte entregue um briefing completo e pronto para produção, contendo:\n1) Nome da campanha ('+camp+')\n2) Destaque da POTÊNCIA e do VALOR do kit\n3) Copy/chamada e CTA\n4) DIREÇÃO VISUAL detalhada: layout otimizado para '+plat+', hierarquia, tipografia, POSICIONAMENTO DO LOGOTIPO, uso das CORES OFICIAIS da marca e elementos gráficos modernos de energia solar.\nPadronize todas as artes entre si (mesma identidade e composição).';
+}
+async function generateKits(){
+  if(!state.ai.keys.openai){toast('Adicione a chave da OpenAI em Ajustes › IA para gerar imagens');nav('settings');setStab('ai');return;}
+  const filled=state.kits.map((k,i)=>({p:(k&&k.p||'').trim(),v:(k&&k.v||'').trim(),i:i+1})).filter(k=>k.p||k.v);
+  if(!filled.length){toast('Preencha ao menos 1 kit');return;}
+  const btn=$('#btnKits'),o=btn.innerHTML;btn.disabled=true;
+  const size=state.kitsPlatform==='ig_story'?'1024x1792':'1024x1024';
+  const box=$('#kitsResult');box.innerHTML='';
+  for(const k of filled){
+    btn.innerHTML='<span class="spinner"></span> Gerando Kit '+k.i+' de '+filled.length+'...';
+    const card=document.createElement('div');card.className='kit-art';
+    card.innerHTML='<div class="kit-art-h">Kit '+k.i+' · '+esc(k.p||'—')+' kWp · R$ '+esc(k.v||'—')+'</div><div class="kit-art-body"><span class="spinner" style="border-top-color:var(--accent)"></span> gerando arte...</div>';
+    box.appendChild(card);
+    try{const raw=await genImage(kitImagePrompt(k),size);const url=await composeLogo(raw);card.querySelector('.kit-art-body').innerHTML='<img src="'+url+'" class="kit-img"><a class="mini-btn" href="'+url+'" download="kit-'+k.i+'-'+campaignFor(state.kitsMonth).replace(/\s+/g,'-')+'.png">⬇️ Baixar</a>';}
+    catch(e){card.querySelector('.kit-art-body').innerHTML='<div class="err">⚠️ '+esc(e.message)+'</div>';}
+  }
+  btn.disabled=false;btn.innerHTML=o;toast('Artes geradas ✓');
+}
+$('#btnKits').onclick=()=>generateKits();
+$('#btnSave').onclick=()=>{const text=$('#resultBox').textContent.trim();if(!text)return;state.saved.unshift({text,tag:$('#resultBadge').textContent,when:new Date().toLocaleString('pt-BR')});save();renderSaved();renderHome();toast('Salvo em Posts ✓');};
+
+/* ==================== NAVEGAÇÃO ==================== */
+const VIEWTITLES={home:'Início',create:'Criar',dates:'Datas',saved:'Meus posts',settings:'Ajustes'};
+function nav(view){
+  $$('.bottomnav .nav-ic').forEach(n=>n.classList.toggle('act',n.dataset.view===view));
+  $$('#appRoot .view').forEach(s=>s.classList.add('hide'));
+  const el=$('#view-'+view);if(el)el.classList.remove('hide');
+  if(view==='home')renderHome();
+  if(view==='dates')renderDates();
+  if(view==='saved')renderSaved();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$$('.bottomnav .nav-ic').forEach(n=>n.onclick=()=>nav(n.dataset.view));
+
+/* tabs criar */
+function setTab(t){$$('#createTabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));['post','ideas','campaign','kits','maint'].forEach(x=>$('#tab-'+x).classList.toggle('hide',x!==t));if(t==='kits')renderKitsModule();if(t==='maint')renderMaint();}
+$$('#createTabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+/* tabs ajustes */
+function setStab(t){$$('#setTabs button').forEach(b=>b.classList.toggle('on',b.dataset.stab===t));['empresa','ai','admin'].forEach(x=>$('#stab-'+x).classList.toggle('hide',x!==t));if(t==='admin')renderUsers();}
+$$('#setTabs button').forEach(b=>b.onclick=()=>setStab(b.dataset.stab));
+
+/* ==================== HOME ==================== */
+function updateModeUI(){
+  const personal=state.usage==='pessoal';
+  const t=(id,fn)=>{const e=$('#'+id);if(e)fn(e);};
+  t('profileCard',e=>e.classList.toggle('hide',personal));
+  t('tabEmpresa',e=>e.textContent=personal?'📎 Contexto':'🏢 Empresa');
+  t('matCardTitle',e=>e.textContent=personal?'Materiais de referência':'Materiais da marca');
+  t('matCardSub',e=>e.textContent=personal?'Anexe o que ajudar a IA a criar no seu estilo: logo, imagens de referência, posts de inspiração, briefings, links e observações. Servem só como contexto e podem ser trocados quando quiser.':'Opcionais, mas quanto mais a LENA conhece sua identidade, mais fiéis e profissionais ficam os conteúdos. Sem eles, usamos boas práticas do mercado.');
+  t('ctxBtnWrap',e=>e.classList.toggle('hide',!personal));
+}
+function renderHome(){
+  const u=curUser();const p=state.profile;const personal=state.usage==='pessoal';
+  updateModeUI();
+  $('#heroHi').textContent=(greet())+', '+((u&&u.name)||'')+' 👋';
+  $('#heroSub').textContent=personal?'Modo pessoal. Anexe informações para personalizar suas criações.':(p.name?('Vamos criar conteúdo de energia solar para a '+p.name+'.'):'Vamos criar conteúdo de energia solar para a Goiás Energy.');
+  $('#stAI').textContent=state.ai.keys[state.ai.provider]?PROVIDERS.find(x=>x.id===state.ai.provider).label.replace(/^[^ ]+ /,''):'—';
+  $('#stPosts').textContent=state.saved.length;
+  $('#stDNA').textContent=state.dna?'✓':'—';
+  $('#stEmpresa').textContent=personal?'Uso pessoal':(p.name||'Goiás Energy');
+  const up=upcomingDates(3);
+  $('#homeDates').innerHTML=up.map(x=>`<button class="rowcard" data-di="${DATES.indexOf(x)}"><div class="rb"><div class="rd">${String(x.d).padStart(2,'0')}</div><div class="rm">${MESES[x.m-1]}</div></div><div><div class="rn">${x.nome}</div><div class="rt">${x.dica}</div></div></button>`).join('');
+  $$('#homeDates [data-di]').forEach(b=>b.onclick=()=>genDate(DATES[+b.dataset.di]));
+  $('#homeSaved').innerHTML=state.saved.length?state.saved.slice(0,2).map(pp=>`<div class="rowcard"><div class="rb">📌</div><div><div class="rn">${esc((pp.text||'').slice(0,40))}…</div><div class="rt">${pp.tag} · ${pp.when}</div></div></div>`).join(''):'<div class="empty">Nenhum post ainda. Crie o primeiro!</div>';
+  renderInsights();renderChart();donutChart();
+}
+function donutChart(){
+  const el=$('#donutBox');if(!el)return;
+  const cats=[['Posts',/^post/i,'#2fa36b'],['Campanhas',/^campanha/i,'#5aa0e6'],['Kits',/^kit/i,'#ffb020'],['Manut.',/^manuten/i,'#e0567a'],['Program.',/^program/i,'#a06ff0']];
+  const data=cats.map(([n,rx,c])=>({n,c,v:state.saved.filter(p=>rx.test((p.tag||'').split('·')[0].trim())).length})).filter(d=>d.v>0);
+  const total=data.reduce((s,d)=>s+d.v,0);const C=2*Math.PI*52;
+  if(!total){el.innerHTML='<div class="donut-empty">Crie conteúdos para ver a distribuição aqui 📊</div>';return;}
+  let start=0;const segs=data.map(d=>{const frac=d.v/total,arc=frac*C,seg={...d,frac,start,arc};start+=arc;return seg;});
+  el.innerHTML='<div class="donut-wrap"><div class="donut-box"><svg viewBox="0 0 140 140">'+
+    '<circle cx="70" cy="70" r="52" fill="none" stroke="var(--surface-2)" stroke-width="16"/>'+
+    segs.map(s=>`<circle class="dseg" data-arc="${s.arc}" cx="70" cy="70" r="52" fill="none" stroke="${s.c}" stroke-width="16" stroke-linecap="butt" stroke-dasharray="0 ${C}" transform="rotate(${(s.start/C*360)-90} 70 70)"/>`).join('')+
+    '</svg><div class="donut-center"><div class="donut-tot">'+total+'</div><div class="donut-lb">conteúdos</div></div></div>'+
+    '<div class="donut-legend">'+segs.map(s=>`<span class="lg"><i style="background:${s.c}"></i>${s.n} <b>${Math.round(s.frac*100)}%</b></span>`).join('')+'</div></div>';
+  const circles=[...el.querySelectorAll('.dseg')];const t0=(performance&&performance.now?performance.now():Date.now());const dur=950;
+  function step(t){t=t||(performance&&performance.now?performance.now():Date.now());const p=Math.min(1,(t-t0)/dur);const e=1-Math.pow(1-p,3);circles.forEach(c=>{const arc=+c.dataset.arc;c.setAttribute('stroke-dasharray',(arc*e)+' '+C);});if(p<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+function daysTo(x){const t=new Date();const base=new Date(t.getFullYear(),t.getMonth(),t.getDate());let o=new Date(t.getFullYear(),x.m-1,x.d);if(o<base)o=new Date(t.getFullYear()+1,x.m-1,x.d);return Math.round((o-base)/864e5);}
+function renderInsights(){
+  const box=$('#insightsList');if(!box)return;const items=[];
+  const hasKey=!!state.ai.keys[state.ai.provider];
+  if(!hasKey)items.push({cls:'warn',i:'⚠️',t:'IA não configurada',x:'Adicione a chave da IA para gerar conteúdos e artes.',a:'Configurar agora',act:'ai'});
+  if(!state.colors)items.push({cls:'tip',i:'🎨',t:'Defina as cores oficiais da marca',x:'Elas personalizam a interface e todas as artes.',a:'Definir cores',act:'empresa'});
+  if(!state.logo)items.push({cls:'tip',i:'🖼️',t:'Cadastre seu logotipo',x:'Ele é aplicado automaticamente nas artes geradas.',a:'Adicionar logo',act:'empresa'});
+  if(!state.dna)items.push({cls:'tip',i:'🧠',t:'Ensine seu estilo à LENA',x:'Anexe posts antigos para conteúdos mais fiéis à marca.',a:'Anexar materiais',act:'empresa'});
+  const up=upcomingDates(1)[0];if(up){const d=daysTo(up);items.push({cls:'op',i:(up.tipo==='sol'?'☀️':'📅'),t:up.nome+(d<=0?' é hoje!':' em '+d+' dia'+(d>1?'s':'')),x:up.dica+' — que tal já criar o post?',a:'Gerar post da data',act:'date',di:DATES.indexOf(up)});}
+  if(!state.saved.length)items.push({cls:'op',i:'🚀',t:'Crie seu primeiro conteúdo',x:'Comece por um post ou uma programação completa.',a:'Criar post',act:'post'});
+  (state.insights||[]).forEach(s=>items.push({cls:'trend',i:'💡',t:s.title,x:s.text}));
+  if(!items.length)items.push({cls:'op',i:'✅',t:'Tudo em ordem!',x:'Sua marca está configurada. Bora criar conteúdo?'});
+  box.innerHTML=items.map((it,idx)=>`<div class="ins ${it.cls}"><div class="ins-i">${it.i}</div><div style="flex:1"><div class="ins-t">${esc(it.t)}</div><div class="ins-x">${esc(it.x)}</div>${it.a?`<span class="ins-a" data-idx="${idx}">${esc(it.a)} →</span>`:''}</div></div>`).join('');
+  box.querySelectorAll('.ins-a').forEach(el=>{const it=items[+el.dataset.idx];el.onclick=()=>{
+    if(it.act==='ai'){nav('settings');setStab('ai');}else if(it.act==='empresa'){nav('settings');setStab('empresa');}
+    else if(it.act==='post'){nav('create');setTab('post');}else if(it.act==='date'){genDate(DATES[it.di]);}};});
+}
+async function generateInsights(){
+  const key=state.ai.keys[state.ai.provider];if(!key){toast('Configure uma chave de IA em Ajustes › IA');nav('settings');setStab('ai');return;}
+  const btn=$('#btnInsights'),o=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spinner"></span> IA...';
+  const usr='Gere 4 INSIGHTS curtos e acionáveis para esta empresa de energia solar HOJE — podem ser: sugestão de campanha, ideia de conteúdo, tendência do mercado de energia solar, ou recomendação para aumentar alcance/engajamento/vendas. Formato EXATO, uma por linha: "Título | descrição de até 18 palavras". Sem numeração, sem outras linhas.';
+  try{const out=await callAI(sysBase(),usr);
+    const items=out.split('\n').map(l=>l.trim()).filter(l=>l.includes('|')).slice(0,5).map(l=>{const parts=l.split('|');return{title:parts[0].replace(/^[-*\d.\s]+/,'').trim(),text:parts.slice(1).join('|').trim()};});
+    if(items.length){state.insights=items;save();renderInsights();toast('Sugestões atualizadas ✓');}else toast('Não consegui interpretar as sugestões');
+  }catch(e){toast('Falhou: '+e.message);}finally{btn.disabled=false;btn.innerHTML=o;}
+}
+$('#btnInsights').onclick=generateInsights;
+function renderChart(){
+  const box=$('#chartBox');if(!box)return;
+  const cats=[['Posts',/^post/i],['Campanhas',/^campanha/i],['Kits',/^kit/i],['Manut.',/^manuten/i],['Program.',/^program/i]];
+  const counts=cats.map(([n,rx])=>({n,v:state.saved.filter(p=>rx.test((p.tag||'').split('·')[0].trim())).length}));
+  const total=state.saved.length;const max=Math.max(1,...counts.map(c=>c.v));
+  const ct=$('#chartTotal');if(ct)ct.textContent=total+(total===1?' conteúdo':' conteúdos');
+  box.innerHTML=counts.map(c=>`<div class="bar-col"><div class="bar-track"><div class="bar-fill" data-h="${Math.round(c.v/max*100)}"></div></div><div class="bar-v">${c.v}</div><div class="bar-n">${c.n}</div></div>`).join('');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{box.querySelectorAll('.bar-fill').forEach((el,i)=>setTimeout(()=>{el.style.height=el.dataset.h+'%';},i*90));}));
+}
+function greet(){const h=new Date().getHours();return h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';}
+function upcomingDates(n){const now=new Date();const md=now.getMonth()*100+now.getDate();const arr=DATES.map(x=>({x,key:x.m*100+x.d})).sort((a,b)=>a.key-b.key);const after=arr.filter(o=>o.key>=md);const list=(after.concat(arr)).slice(0,n);return list.map(o=>o.x);}
+$$('#view-home .qa').forEach(b=>b.onclick=()=>{const a=b.dataset.act;if(a==='post'){nav('create');setTab('post');}else if(a==='ideas'){nav('create');setTab('ideas');}else if(a==='campaign'){nav('create');setTab('campaign');}else if(a==='dates'){nav('dates');}});
+$$('#view-home [data-goto]').forEach(a=>a.onclick=()=>nav(a.dataset.goto));
+$('#btnCtx').onclick=()=>{nav('settings');setStab('empresa');};
+
+/* ==================== DATAS ==================== */
+function renderDates(){
+  const opts=[['all','Todas'],['nac','Nacionais'],['go','Goiás'],['min','Mineiros'],['esp','Especiais'],['sol','Solar']];
+  $('#dateFilters').innerHTML=opts.map(([k,l])=>`<button class="chip ${state.dateFilter===k?'active':''}" data-f="${k}">${l}</button>`).join('');
+  $$('#dateFilters .chip').forEach(c=>c.onclick=()=>{state.dateFilter=c.dataset.f;save();renderDates();});
+  let list=DATES.slice().sort((a,b)=>a.m-b.m||a.d-b.d);if(state.dateFilter!=='all')list=list.filter(x=>x.tipo===state.dateFilter);
+  $('#datesList').innerHTML=list.map(x=>`<div class="date-item"><div class="date-badge"><div class="d">${String(x.d).padStart(2,'0')}</div><div class="m">${MESES[x.m-1]}</div></div><div class="date-info"><div class="dn">${x.nome} <span class="tag ${x.tipo}">${DATE_TIPOS[x.tipo]}</span></div><div class="dt">${x.dica}</div></div><button class="mini-btn" data-di="${DATES.indexOf(x)}">✨ Gerar post</button></div>`).join('');
+  $$('#datesList [data-di]').forEach(b=>b.onclick=()=>genDate(DATES[+b.dataset.di]));
+}
+function genDate(x){nav('create');setTab('post');const theme=`Data comemorativa: ${x.nome}. Contexto: ${x.dica}. Adapte ao mercado de energia solar e ao DNA/estilo da marca, mantendo o padrão visual e de comunicação dos posts anteriores.`;$('#briefing').value=theme;generatePost();}
+
+/* ==================== SAVED ==================== */
+function renderSaved(){
+  if(!state.saved.length){$('#savedList').innerHTML='<div class="empty">Nenhum post salvo. Gere e clique em 📌 Salvar.</div>';return;}
+  $('#savedList').innerHTML=state.saved.map((p,i)=>`<div class="saved-item" data-i="${i}"><div class="meta"><span class="badge">${p.tag||''}</span><span style="font-size:11px;color:var(--text-mute)">${p.when||''}</span></div><div class="txt">${esc(p.text)}</div><div class="btn-row" style="margin-top:9px"><button class="mini-btn" data-c="${i}">📋 Copiar</button><button class="mini-btn danger" data-d="${i}">🗑️ Excluir</button></div></div>`).join('');
+  $$('#savedList .saved-item').forEach(el=>el.querySelector('.txt').onclick=()=>el.classList.toggle('open'));
+  $$('#savedList [data-c]').forEach(b=>b.onclick=e=>{e.stopPropagation();navigator.clipboard.writeText(state.saved[+b.dataset.c].text);toast('Copiado!');});
+  $$('#savedList [data-d]').forEach(b=>b.onclick=e=>{e.stopPropagation();state.saved.splice(+b.dataset.d,1);save();renderSaved();renderHome();});
+}
+
+/* ==================== EMPRESA / DNA (Ajustes) ==================== */
+const PF={p_name:'name',p_site:'site',p_city:'city',p_state:'state',p_region:'region',p_address:'address',p_phone:'phone',p_whatsapp:'whatsapp',p_social:'social',p_audience:'audience',p_diff:'diff',p_products:'products',p_tone:'tone',p_goals:'goals'};
+function loadProfile(){for(const id in PF){const e=$('#'+id);if(e)e.value=state.profile[PF[id]]||'';}$('#p_dna').value=state.dna||'';const pn=$('#p_notes');if(pn)pn.value=state.notes||'';const pc=$('#p_colors');if(pc){pc.value=state.colors||'';renderSwatches(state.colors,'#p_swatches');}}
+$('#btnSaveProfile').onclick=()=>{for(const id in PF)state.profile[PF[id]]=v(id);save();renderHome();toast('Perfil salvo ✓');};
+$('#btnSaveDNA').onclick=()=>{state.dna=v('p_dna');state.notes=v('p_notes');state.colors=v('p_colors');save();applyBrandTheme();renderHome();toast('Materiais salvos ✓');};
+let sBook=[],sPosts=[],sLogo=null;
+function bindDNAUpload(){
+  sLogo=state.logo?{dataURL:state.logo,mime:'image/png',b64:(state.logo.split(',')[1]||'')}:null;
+  const b=$('#sUpBook'),bf=$('#sfBook');if(b){b.onclick=()=>bf.click();bf.onchange=async()=>{for(const f of bf.files){if(sBook.length>=4){toast('Máximo 4');break;}const im=await fileToImg(f);if(im)sBook.push(im);}renderSMats();};}
+  const l=$('#sUpLogo'),lf=$('#sfLogo');if(l){l.onclick=()=>lf.click();lf.onchange=async()=>{const im=await fileToImg(lf.files[0]);if(im){sLogo=im;state.logo=im.dataURL;save();renderHome();}renderSMats();};}
+  const p=$('#sUpPosts'),pf=$('#sfPosts');if(p){p.onclick=()=>pf.click();pf.onchange=async()=>{for(const f of pf.files){if(sPosts.length>=6){toast('Máximo 6');break;}const im=await fileToImg(f);if(im)sPosts.push(im);}renderSMats();};}
+  bindColors('#p_colors','#p_swatches',true);
+  renderSMats();
+}
+function renderSMats(){
+  thumbInto('#sthBook',sBook,i=>{sBook.splice(i,1);renderSMats();});
+  thumbInto('#sthPosts',sPosts,i=>{sPosts.splice(i,1);renderSMats();});
+  const tl=$('#sthLogo');if(tl){tl.innerHTML=sLogo?`<div class="thumb-wrap"><img class="thumb" src="${sLogo.dataURL}"><div class="thumb-x">×</div></div>`:'';const x=tl.querySelector('.thumb-x');if(x)x.onclick=()=>{sLogo=null;state.logo='';save();renderHome();renderSMats();};}
+}
+$('#btnAnalyze').onclick=()=>analyzeMaterials({book:sBook,posts:sPosts,logo:sLogo},'p_dna','btnAnalyze');
+
+/* ==================== IA (Ajustes) ==================== */
+function renderProviders(){$('#providerChips').innerHTML=PROVIDERS.map(p=>`<button class="chip ${state.ai.provider===p.id?'active':''}" data-p="${p.id}">${p.label}</button>`).join('');$$('#providerChips .chip').forEach(c=>c.onclick=()=>{state.ai.provider=c.dataset.p;save();renderProviders();renderHome();});}
+function loadAI(){$('#k_anthropic').value=state.ai.keys.anthropic||'';$('#m_anthropic').value=state.ai.models.anthropic||'claude-sonnet-4-5';$('#k_openai').value=state.ai.keys.openai||'';$('#m_openai').value=state.ai.models.openai||'gpt-4o';$('#k_gemini').value=state.ai.keys.gemini||'';$('#m_gemini').value=state.ai.models.gemini||'gemini-2.0-flash';const im=$('#imgModel');if(im)im.value=state.imgModel||'dall-e-3';const lp=$('#imgLogoPos');if(lp)lp.value=state.logoPos||'auto';}
+$('#btnSaveAI').onclick=()=>{state.ai.keys.anthropic=v('k_anthropic');state.ai.models.anthropic=v('m_anthropic')||'claude-sonnet-4-5';state.ai.keys.openai=v('k_openai');state.ai.models.openai=v('m_openai')||'gpt-4o';state.ai.keys.gemini=v('k_gemini');state.ai.models.gemini=v('m_gemini')||'gemini-2.0-flash';state.imgModel=val('imgModel')||'dall-e-3';state.logoPos=val('imgLogoPos')||'auto';save();renderHome();toast('Chaves salvas ✓');};
+
+/* aplica o logo na arte via canvas (proporção, respiro, contraste) */
+function composeLogo(baseURL){
+  return new Promise(resolve=>{
+    if(!state.logo||state.logoPos==='none'){resolve(baseURL);return;}
+    const base=new Image();
+    base.onload=()=>{const logo=new Image();
+      logo.onload=()=>{try{
+        const c=document.createElement('canvas');c.width=base.naturalWidth||1024;c.height=base.naturalHeight||1024;
+        const ctx=c.getContext('2d');ctx.drawImage(base,0,0,c.width,c.height);
+        const W=c.width,H=c.height;
+        const r=Math.min(W*0.24/(logo.naturalWidth||1),H*0.14/(logo.naturalHeight||1));
+        const dw=(logo.naturalWidth||1)*r,dh=(logo.naturalHeight||1)*r,m=W*0.05;
+        const pos=state.logoPos;let x,y;
+        if(pos==='tl'){x=m;y=m;}else if(pos==='tr'){x=W-dw-m;y=m;}else if(pos==='br'){x=W-dw-m;y=H-dh-m;}else{x=(W-dw)/2;y=m;}
+        let lum=0.5;try{const sx=Math.max(0,Math.floor(x)),sy=Math.max(0,Math.floor(y)),sw=Math.max(1,Math.min(W-sx,Math.ceil(dw))),sh=Math.max(1,Math.min(H-sy,Math.ceil(dh)));
+          const d=ctx.getImageData(sx,sy,sw,sh).data;let s=0,n=0;for(let i=0;i<d.length;i+=40){s+=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];n++;}if(n)lum=(s/n)/255;}catch(e){}
+        ctx.shadowColor=lum<0.5?'rgba(255,255,255,0.65)':'rgba(0,0,0,0.35)';ctx.shadowBlur=Math.round(W*0.012);ctx.shadowOffsetX=0;ctx.shadowOffsetY=0;
+        ctx.drawImage(logo,x,y,dw,dh);
+        resolve(c.toDataURL('image/png'));
+      }catch(e){resolve(baseURL);}};
+      logo.onerror=()=>resolve(baseURL);logo.src=state.logo;};
+    base.onerror=()=>resolve(baseURL);base.src=baseURL;
+  });
+}
+
+/* ===== GERAÇÃO DE IMAGEM (OpenAI) ===== */
+async function genImage(prompt,size){
+  const key=state.ai.keys.openai;
+  if(!key)throw new Error('Para gerar imagens, adicione a chave da OpenAI (ChatGPT) em Ajustes › IA.');
+  const model=state.imgModel||'dall-e-3';
+  const body={model,prompt,n:1,size:size||'1024x1024'};
+  if(model==='dall-e-3')body.response_format='b64_json';
+  const r=await fetch('https://api.openai.com/v1/images/generations',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+key},body:JSON.stringify(body)});
+  const j=await r.json();if(!r.ok)throw new Error((j.error&&j.error.message)||'Erro na geração de imagem');
+  return 'data:image/png;base64,'+j.data[0].b64_json;
+}
+async function genImageFromResult(){
+  if(!state.ai.keys.openai){toast('Adicione a chave da OpenAI em Ajustes › IA para gerar imagens');nav('settings');setStab('ai');return;}
+  const txt=$('#resultBox').textContent.trim();if(!txt||txt.startsWith('Criando'))return;
+  const btn=$('#btnImage'),o=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Imagem...';
+  try{
+    const ip=await callAI('Você cria prompts de geração de imagem em inglês para artes de marketing profissionais.','Com base neste conteúdo de post de energia solar, escreva UM prompt em inglês (máx 80 palavras) para gerar a ARTE principal. Inclua: estilo/design moderno, layout, as cores da marca ('+(state.colors||'solar green and yellow')+'), elementos de energia solar, espaço reservado no topo para logo, e qualquer texto curto essencial escrito corretamente em português. Responda SÓ com o prompt.\n\nConteúdo:\n'+txt.slice(0,1500));
+    const raw=await genImage(ip.trim(),'1024x1024');const url=await composeLogo(raw);
+    let img=$('#resultImage');if(!img){img=document.createElement('div');img.id='resultImage';img.style.marginTop='12px';$('#resultBox').after(img);}
+    img.innerHTML='<img src="'+url+'" style="width:100%;border-radius:12px;display:block;margin-bottom:9px"><a class="mini-btn" href="'+url+'" download="lena-post.png">⬇️ Baixar imagem</a>';
+  }catch(e){toast('Falhou: '+e.message);}
+  finally{btn.disabled=false;btn.innerHTML=o;}
+}
+$('#btnImage').onclick=genImageFromResult;
+function kitImagePrompt(kit){
+  const camp=campaignFor(state.kitsMonth);const colors=state.colors||'green and yellow solar palette';const story=state.kitsPlatform==='ig_story';
+  const style=state.kitsMode==='espelhar'&&state.kitsDNA?('Match this brand visual style: '+state.kitsDNA.slice(0,400)+'. '):'';
+  return style+'Design a professional, modern Instagram '+(story?'Story vertical 9:16':'Feed square')+' promotional graphic for a Brazilian solar energy company. Campaign title in Portuguese: "Kits Promocionais '+camp+'". Feature a solar kit offer with LARGE, correctly spelled Portuguese text: "'+(kit.p||'')+' kWp" as the kit power and "R$ '+(kit.v||'')+'" as the price, plus a short call to action. Brand colors: '+colors+'. Clean layout, strong visual hierarchy, modern solar-panel and sunlight graphic elements, empty space reserved at the top for a logo. Marketing-ready, high quality professional advertising design.';
+}
+$('#btnTestAI').onclick=async()=>{const b=$('#btnTestAI'),o=b.innerHTML;b.disabled=true;b.innerHTML='<span class="spinner"></span> Testando...';$('#btnSaveAI').click();try{const r=await callAI('Responda só: OK.','teste');toast('Conexão OK: '+r.slice(0,20));}catch(e){toast('Falhou: '+e.message);}finally{b.disabled=false;b.innerHTML=o;}};
+
+/* ==================== MERCADO (switcher) ==================== */
+function applyMarketToUI(){const mk=MARKETS.find(x=>x.id===state.sel.market)||MARKETS[0];$('#mktSwEm').textContent=mk.emoji;$('#mktSwName').textContent=mk.name.replace('Energia ','');}
+$('#mktSwitcher').onclick=e=>{e.stopPropagation();renderSwMenu();$('#swMenu').classList.toggle('hide');};
+document.addEventListener('click',()=>{const m=$('#swMenu');if(m)m.classList.add('hide');});
+function renderSwMenu(){const m=$('#swMenu');if(!m)return;m.innerHTML='<div class="sw-head">Mercado</div>'+MARKETS.map(x=>{const soon=x.id!=='solar';return `<div class="sw-item ${soon?'soon':''}" data-m="${x.id}"><span>${x.emoji}</span><span>${x.name}</span>${soon?'<span class="st">Em breve</span>':(state.sel.market===x.id?'<span class="st">Atual</span>':'')}</div>`;}).join('');$$('#swMenu .sw-item').forEach(it=>{if(!it.classList.contains('soon'))it.onclick=ev=>{ev.stopPropagation();state.sel.market=it.dataset.m;save();$('#swMenu').classList.add('hide');applyMarketToUI();};});}
+
+/* ==================== USUÁRIO / ADMIN ==================== */
+function updateUserChrome(){const u=curUser();if(!u)return;$('#userName').textContent=u.name;$('#userRole').textContent=u.role==='admin'?'administrador':'usuário';$('#userAvatar').textContent=(u.name[0]||'L').toUpperCase();const isA=u.role==='admin';$('#setAdminTab').classList.toggle('hide',false);$('#adminOnly').classList.toggle('hide',!isA);}
+$('#btnLogout').onclick=async()=>{try{if(sb)await sb.auth.signOut();}catch(e){}CUR=null;PROFILE=null;showAuth('login');};
+let _admUsers=[];
+async function renderUsers(){const u=curUser();if(!u||u.role!=='admin'){$('#usersTable').innerHTML='';return;}
+  $('#usersTable').innerHTML='<tr><td style="padding:10px;color:var(--text-mute)">Carregando…</td></tr>';
+  const {data:users,error}=await sb.from('profiles').select('id,name,role,state');
+  if(error){$('#usersTable').innerHTML='<tr><td style="padding:10px;color:var(--danger)">Erro ao listar: '+esc(error.message)+'</td></tr>';return;}
+  _admUsers=users||[];
+  let html='<tr><th>Nome</th><th>Perfil</th><th>Posts</th><th>Ações</th></tr>';
+  _admUsers.forEach(x=>{const posts=((x.state&&x.state.saved)||[]).length;html+=`<tr><td><b>${esc(x.name||'—')}</b>${x.id===CUR?' <span style="font-size:11px;color:var(--text-mute)">(você)</span>':''}</td><td><span class="rbadge ${x.role}">${x.role==='admin'?'Admin':'Usuário'}</span></td><td>${posts}</td><td style="display:flex;gap:6px;flex-wrap:wrap"><button class="mini-btn" data-vw="${x.id}">Ver</button>${x.id!==CUR?`<button class="mini-btn" data-role="${x.id}" data-r="${x.role}">${x.role==='admin'?'→Usuário':'→Admin'}</button>`:''}</td></tr>`;});
+  $('#usersTable').innerHTML=html;$('#userDetail').innerHTML='';
+  $$('#usersTable [data-role]').forEach(b=>b.onclick=async()=>{const nr=b.dataset.r==='admin'?'user':'admin';const {error}=await sb.from('profiles').update({role:nr}).eq('id',b.dataset.role);if(error){toast('Erro: '+error.message);return;}toast('Perfil atualizado ✓');renderUsers();});
+  $$('#usersTable [data-vw]').forEach(b=>b.onclick=()=>viewUserData(b.dataset.vw));
+}
+function viewUserData(id){const x=_admUsers.find(z=>z.id===id);if(!x)return;const st=x.state||{};const posts=st.saved||[];const p=st.profile||{};let html=`<div class="divider"></div><h3 style="font-size:15px;margin-bottom:8px">Dados de ${esc(x.name||'—')}</h3><div class="sub">Empresa: <b>${esc(p.name||'—')}</b> · ${esc(p.city||'—')}/${esc(p.state||'')} · DNA: <b>${st.dna?'sim':'não'}</b> · Posts: <b>${posts.length}</b></div>`;html+=posts.length?posts.map(pp=>`<div class="saved-item"><div class="meta"><span class="badge">${esc(pp.tag||'')}</span><span style="font-size:11px;color:var(--text-mute)">${esc(pp.when||'')}</span></div><div class="txt">${esc(pp.text)}</div></div>`).join(''):'<div class="empty">Sem posts.</div>';$('#userDetail').innerHTML=html;$('#userDetail').scrollIntoView({behavior:'smooth',block:'nearest'});}
+$('#btnChangeMyPass').onclick=async()=>{const a=v('adm_newpass'),b=v('adm_newpass2');if(a.length<6){toast('Mínimo 6 caracteres');return;}if(a!==b){toast('Não conferem');return;}const {error}=await sb.auth.updateUser({password:a});if(error){toast('Erro: '+error.message);return;}$('#adm_newpass').value='';$('#adm_newpass2').value='';toast('Senha atualizada ✓');};
+
+/* ==================== UTIL ==================== */
+function v(id){const e=$('#'+id);return e?e.value.trim():'';}
+function val(id){const e=$('#'+id);return e?e.value:'';}
+function valChannelI(){return val('channelI')||state.sel.channel;}
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fillChannels(){['#channel','#channelI'].forEach(sel=>{const e=$(sel);if(e)e.innerHTML=CHANNELS.map(c=>`<option value="${c.id}">${c.label}</option>`).join('');});const c=$('#channel');if(c){c.value=state.sel.channel;c.onchange=()=>{state.sel.channel=c.value;save();};}}
+
+/* ==================== BUILD / BOOT ==================== */
+let built=false;
+function buildStatic(){if(built)return;built=true;fillChannels();renderProviders();bindDNAUpload();$('#themeToggle').onclick=()=>{state.theme=state.theme==='light'?'dark':'light';save();applyTheme();};}
+function renderAll(){applyTheme();fillChannels();loadProfile();loadAI();renderProviders();applyMarketToUI();renderSwMenu();updateUserChrome();renderSaved();renderHome();renderBuilder();setTab('post');setStab('empresa');}
+
+route();
+</script>
+</body>
+</html>
